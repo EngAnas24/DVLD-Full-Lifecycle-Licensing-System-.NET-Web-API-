@@ -1,15 +1,5 @@
-```python
-import os
-
-readme_content = """# 🚗 DVLD: Driving & Vehicle Licensing Department System
+🚗 DVLD: Driving & Vehicle Licensing Department System
 ### *A Full-Lifecycle Driving License Management System built with .NET Core Web API & ADO.NET*
-
-[![Framework](https://img.shields.io/badge/.NET%20Core%20Web%20API-8.0-purple.svg)](#)
-[![Language](https://img.shields.io/badge/Language-C%23-blue.svg)](#)
-[![Database](https://img.shields.io/badge/Database-SQL%20Server-red.svg)](#)
-[![Architecture](https://img.shields.io/badge/Architecture-N--Tier%20%2F%20Client--Server-green.svg)](#)
-
----
 
 ## 📌 Project Overview
 
