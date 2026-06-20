@@ -25,9 +25,9 @@ namespace DVLD.Licenses.Local_Licenses
             this.Close();
         }
 
-        private void frmShowLicenseInfo_Load(object sender, EventArgs e)
+        private async void frmShowLicenseInfo_Load(object sender, EventArgs e)
         {
-            ctrlDriverLicenseInfo1.LoadInfo(_LicenseID);
+           await ctrlDriverLicenseInfo1.LoadInfo(_LicenseID);
 
         }
 

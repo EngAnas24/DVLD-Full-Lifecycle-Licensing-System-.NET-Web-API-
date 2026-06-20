@@ -52,8 +52,8 @@ namespace Business_Layer.Services
             int outId = 0;
             var queryParams = new GetLastTestDTO
             {
-                TestID = -1, // هذا سيذهب للـ @ID
-                LicenseClassID = LicenseClassID, // هذا سيذهب للـ @LicenseClassID
+                TestID = -1, 
+                LicenseClassID = LicenseClassID,
                 TestTypeID = TestTypeID,
                 ApplicantPersonID = ApplicantPersonID
             };

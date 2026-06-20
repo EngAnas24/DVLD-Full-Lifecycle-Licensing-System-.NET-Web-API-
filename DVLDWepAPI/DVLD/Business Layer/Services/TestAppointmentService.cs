@@ -61,7 +61,6 @@ namespace Business_Layer.Services
         {
             int outId;
 
-            // نستخدم كلاس مخصص بدلاً من new { ... } لضمان وجود خاصية ID
             var queryParams = new TestQueryParams { AppID = localAppID, TypeID = testTypeID };
 
             var result = SqlHelper.ExecuteeQuerySingl<TestResultResult>(
@@ -78,7 +77,6 @@ namespace Business_Layer.Services
         {
             int outId;
 
-            // نستخدم كلاس مخصص بدلاً من new { ... } لضمان وجود خاصية ID
             var queryParams = new TestQueryParams { AppID = localAppID, TypeID = testTypeID };
 
             var result = SqlHelper.ExecuteeQuerySingl<TestResultResult>(
@@ -94,7 +92,6 @@ namespace Business_Layer.Services
         {
             int outId;
 
-            // نستخدم كلاس مخصص بدلاً من new { ... } لضمان وجود خاصية ID
             var queryParams = new TestQueryParams { AppID = localAppID, TypeID = testTypeID };
 
             var result = SqlHelper.ExecuteeQuerySingl<TestResultResult>(
@@ -105,7 +102,7 @@ namespace Business_Layer.Services
 
             return result != null ? result.returnNum : 0;
         }
-        public int DoesAttendTestType(int LocalicenseID, int TestTypeID)
+        public bool DoesAttendTestType(int LocalicenseID, int TestTypeID)
         {
             int outId;
 
@@ -117,7 +114,7 @@ namespace Business_Layer.Services
                 out outId
             );
 
-            return result != null ? result.returnNum : 0;
+            return result != null && result.returnNum == 1 ? true : false;
         }
 
     }

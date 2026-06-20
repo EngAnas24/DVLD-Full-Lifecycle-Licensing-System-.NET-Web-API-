@@ -191,14 +191,10 @@ namespace DVLD.Controllers
 
             try
             {
-                int found = TestAppointmentService.DoesAttendTestType(LocalicenseID, testTypeID);
-                if (found > 0)
+                bool found = TestAppointmentService.DoesAttendTestType(LocalicenseID, testTypeID);
+                if (found)
                 {
-                    return Ok(new
-                    {
-                        found = found,
-                        Message = $"حضر الاختبار "
-                    });
+                    return Ok(found);
                 }
                 else
                     return NotFound("لم يحضر أي  اختبار  ");

@@ -547,7 +547,6 @@
             this.Controls.Add(this.gpApplicationInfo);
             this.Name = "frmRenewLocalDrivingLicenseApplication";
             this.Text = "frmRenewLocalDrivingLicenseApplication";
-            this.Load += new System.EventHandler(this.frmRenewLocalDrivingLicenseApplication_Load);
             this.gpApplicationInfo.ResumeLayout(false);
             this.gpApplicationInfo.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox11)).EndInit();

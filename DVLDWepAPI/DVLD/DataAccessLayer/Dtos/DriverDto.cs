@@ -10,10 +10,12 @@ namespace DataAccessLayer.Dtos
     {
         public int DriverID { get; set; }
         public int PersonID { get; set; }
-        public string NationalNo { get; set; } // أضفه
-        public string FullName { get; set; }    // أضفه
+        public string NationalNo { get; set; } 
+        public string FullName { get; set; }   
         public DateTime CreatedDate { get; set; }
         public int NumberOfActiveLicenses { get; set; }
+        public int CreatedByUserID { get; set; }
+         
     }
 
     public class DriverLicenseDTO

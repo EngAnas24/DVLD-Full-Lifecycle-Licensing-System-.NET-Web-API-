@@ -166,5 +166,10 @@ namespace DVLD.Applications.International_License
             frmShowPersonLicenseHistory frm = new frmShowPersonLicenseHistory(driver.PersonID);
              frm.ShowDialog();
         }
+
+        private void gpApplicationInfo_Enter(object sender, EventArgs e)
+        {
+
+        }
     }
 }

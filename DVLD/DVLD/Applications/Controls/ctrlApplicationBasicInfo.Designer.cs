@@ -68,9 +68,10 @@
             // llViewPersonInfo
             // 
             this.llViewPersonInfo.AutoSize = true;
+            this.llViewPersonInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.llViewPersonInfo.Location = new System.Drawing.Point(720, 171);
             this.llViewPersonInfo.Name = "llViewPersonInfo";
-            this.llViewPersonInfo.Size = new System.Drawing.Size(90, 13);
+            this.llViewPersonInfo.Size = new System.Drawing.Size(133, 20);
             this.llViewPersonInfo.TabIndex = 187;
             this.llViewPersonInfo.TabStop = true;
             this.llViewPersonInfo.Text = "View Person Info.";

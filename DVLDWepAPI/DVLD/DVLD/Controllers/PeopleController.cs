@@ -2,11 +2,13 @@
 using BusinessLayer.Services;
 using DAL.DataAccessLayer.Common;
 using DVDL.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DVLD.Controllers
 {
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     // استخدام Primary Constructor بشكل صحيح

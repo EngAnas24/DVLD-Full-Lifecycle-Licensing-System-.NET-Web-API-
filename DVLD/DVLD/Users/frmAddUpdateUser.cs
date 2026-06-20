@@ -19,91 +19,101 @@ namespace DVLD.Users
         private eMode Mode;
         private int UserID;
         public User _User;
+        public UserDto User;
+
         private readonly UserService _userService;
+
         private static readonly System.Net.Http.HttpClient _httpClient = new System.Net.Http.HttpClient
         {
-            BaseAddress = new Uri("http://localhost:5067/") // تأكد من وجود الـ / في النهاية
+            BaseAddress = new Uri("http://localhost:5067/")
         };
+
         public frmAddUpdateUser()
         {
             InitializeComponent();
             Mode = eMode.AddNew;
             _userService = new UserService(_httpClient);
         }
-        public frmAddUpdateUser(int UserID)
+
+        public frmAddUpdateUser(int userID)
         {
             InitializeComponent();
             Mode = eMode.Update;
             _userService = new UserService(_httpClient);
-            this.UserID = UserID;
+            this.UserID = userID;
         }
 
-        private void frmAddUpdateUser_Load(object sender, EventArgs e)
+        private async void frmAddUpdateUser_Load(object sender, EventArgs e)
         {
-            Shown();
+            _ResetDefaultValues();
+
             if (Mode == eMode.Update)
-                LoadData();
+                await LoadData();
         }
 
-        private async void LoadData()
+        private async Task LoadData()
         {
-            var User = await _userService.GetUserByIdAsync(UserID);
-            ctrlPersonCardWithFilter1.FilterEnabled = false;
-            if (User == null)
+            try
             {
-                MessageBox.Show("No User with ID = " + User, "User Not Found", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                this.Close();
+                // إسناد البيانات مباشرة للمتغير العام الخاص بالفورم لمنع الـ NullReferenceException
+                User = await _userService.GetUserByIdAsync(UserID);
 
-                return;
-            }
-           else
-            {
+                ctrlPersonCardWithFilter1.FilterEnabled = false;
+
+                if (User == null)
+                {
+                    MessageBox.Show($"No User with ID = {UserID}", "User Not Found", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    this.Close();
+                    return;
+                }
+
+                // تعبئة عناصر الواجهة من الكائن العام
                 lblUserID.Text = User.ID.ToString();
                 txtUserName.Text = User.UserName;
                 txtPassword.Text = User.Password;
                 txtConfirmPassword.Text = User.Password;
-                chkIsActive.Checked = (User.IsActive);
+                chkIsActive.Checked = User.IsActive;
                 ctrlPersonCardWithFilter1.LoadPersonInfo(User.PersonalID);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading data: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.Close();
             }
         }
 
-        public void Shown()
+        private void _ResetDefaultValues()
         {
             if (Mode == eMode.AddNew)
             {
                 lblTitle.Text = "Add New User";
-                this.Text  = "Add New User";
-                _User = new User();
+                this.Text = "Add New User";
+                _User = new User(); // حجز مكان في الذاكرة لوضع الإضافة
                 tpLoginInfo.Enabled = false;
-                ctrlPersonCardWithFilter1.FilterFocus();
+                btnSave.Enabled = false;
 
-                
+                // تصفير الحقول فقط في وضع الإضافة الجديد
+                txtUserName.Text = "";
+                txtPassword.Text = "";
+                txtConfirmPassword.Text = "";
+                chkIsActive.Checked = true;
+
+                ctrlPersonCardWithFilter1.FilterFocus();
             }
             else
             {
-
                 lblTitle.Text = "Update User";
                 this.Text = "Update User";
-
                 tpLoginInfo.Enabled = true;
                 btnSave.Enabled = true;
             }
-
-            txtUserName.Text = "";
-            txtPassword.Text = "";
-            txtConfirmPassword.Text = "";
-            chkIsActive.Checked = true;
-
         }
-
-
-
 
         private void btnClose_Click(object sender, EventArgs e)
         {
             this.Close();
-
         }
+
         private void btnPersonInfoNext_Click(object sender, EventArgs e)
         {
             if (Mode == eMode.Update)
@@ -122,7 +132,7 @@ namespace DVLD.Users
             }
             else
             {
-                MessageBox.Show("Please Select a Person  ", "Please Select a Person ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please Select a Person", "Please Select a Person", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 ctrlPersonCardWithFilter1.FilterFocus();
             }
         }
@@ -131,46 +141,55 @@ namespace DVLD.Users
         {
             if (!this.ValidateChildren())
             {
-                //Here we dont continue becuase the form is not valid
-                MessageBox.Show("Some fileds are not valide!, put the mouse over the red icon(s) to see the erro",
+                MessageBox.Show("Some fields are not valid!, put the mouse over the red icon(s) to see the error",
                     "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
-
             }
+
+            // برمجة دفاعية لحماية الكائن من أي خطأ غير متوقع
+            if (_User == null) _User = new User();
 
             _User.PersonalID = ctrlPersonCardWithFilter1.PersonID;
             _User.UserName = txtUserName.Text.Trim();
             _User.Password = txtPassword.Text.Trim();
             _User.IsActive = chkIsActive.Checked;
 
-
-            if (UserID <= 0)
+            try
             {
-                try
+                if (Mode == eMode.AddNew)
                 {
+                    // استدعاء واحد فقط نظيف لمنع التكرار
                     _User = await _userService.AddUserAsync(_User);
-                    //change form mode to update.
-                    Mode = eMode.Update;
-                    lblTitle.Text = "Update User";
-                    this.Text = "Update User";
-                    MessageBox.Show("Data Saved Successfully.", "Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    if (_User != null && _User.ID > 0)
+                    {
+                        Mode = eMode.Update;
+                        lblUserID.Text = _User.ID.ToString();
+                        lblTitle.Text = "Update User";
+                        this.Text = "Update User";
+                        MessageBox.Show("Data Saved Successfully.", "Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Error: Data was not saved successfully.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
-                catch(Exception ex)
+                else // وضع التعديل (Mode == eMode.Update)
                 {
-                    MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    _User.ID = UserID;
+                    _User = await _userService.UpdateUser(UserID, _User);
+
+                    if (_User != null)
+                    {
+                        lblUserID.Text = _User.ID.ToString();
+                        MessageBox.Show("Data Updated Successfully.", "Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
             }
-            else if (UserID > 0)
+            catch (Exception ex)
             {
-                _User.ID = UserID;
-                _User = await _userService.UpdateUser(UserID, _User);
-                lblUserID.Text = _User.ID.ToString();
-                MessageBox.Show("Data Saved Successfully.", "Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
+                MessageBox.Show($"An error occurred while saving: {ex.Message}", "Exception", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            else
-                MessageBox.Show("Error: Data Is not Saved Successfully.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
         }
 
         private void txtConfirmPassword_Validating(object sender, CancelEventArgs e)
@@ -183,8 +202,7 @@ namespace DVLD.Users
             else
             {
                 errorProvider1.SetError(txtConfirmPassword, null);
-            };
-
+            }
         }
 
         private void txtPassword_Validating(object sender, CancelEventArgs e)
@@ -197,8 +215,7 @@ namespace DVLD.Users
             else
             {
                 errorProvider1.SetError(txtPassword, null);
-            };
-
+            }
         }
 
         private void txtUserName_Validating(object sender, CancelEventArgs e)
@@ -207,16 +224,11 @@ namespace DVLD.Users
             {
                 e.Cancel = true;
                 errorProvider1.SetError(txtUserName, "Username cannot be blank");
-                return;
             }
             else
             {
                 errorProvider1.SetError(txtUserName, null);
-            };
+            }
         }
-
-
-
     }
-    
 }

@@ -19,6 +19,7 @@ namespace DVLD.Applications.Local_Driving_License
     public partial class frmAddUpdateLocalDrivingLicesnseApplication : Form
     {
         private int _PersonID;
+        private int peronId;
         private readonly LocalDrivingLicesnseApplicationsService _LocalapplicationService;
         private readonly LicenseClassService _licenseClassService;
         private readonly clsApplicationService applicationService;
@@ -67,8 +68,18 @@ namespace DVLD.Applications.Local_Driving_License
             cbLicenseClass.DisplayMember = "ClassName";
             cbLicenseClass.ValueMember = "LicenseClassID";
 
+            if(_Mod == eMod.Add)
+            {
             if (cbLicenseClass.Items.Count > 0)
                 cbLicenseClass.SelectedIndex = 0;
+            }
+            if (_Mod == eMod.Update)
+            {
+                if (cbLicenseClass.Items.Count > 0)
+                    cbLicenseClass.SelectedIndex =
+                        await _licenseClassService.GetLicenseClassIDByLocalAppID(_LocalLicesnseApplicationID) - 1;
+            }
+
         }
         private async Task _RestData()
         {
@@ -126,16 +137,18 @@ namespace DVLD.Applications.Local_Driving_License
 
         public async void frmAddUpdateLocalDrivingLicesnseApplication_Load(object sender, EventArgs e)
         {
+            ctrlPersonCardWithFilter1.OnPersonSelected += ctrlPersonCardWithFilter1_OnPersonSelected;
             await LicenseClassCombox();  
             await _RestData();
 
             if(_Mod == eMod.Update)
             {
-                _LoadData();
+               await _LoadData();
             }
+            
         }
 
-        private async void _LoadData()
+        private async Task _LoadData()
         {
             ctrlPersonCardWithFilter1.FilterEnabled = false;
             var localLicense =await _LocalapplicationService.GetLocalApplicationByIdAsync(_LocalLicesnseApplicationID);
@@ -147,32 +160,30 @@ namespace DVLD.Applications.Local_Driving_License
 
                 return;
             }
-
             lblLocalDrivingLicebseApplicationID.Text = _LocalLicesnseApplicationID.ToString() ;
             lblApplicationDate.Text = DateTime.Now.ToString();
             cbLicenseClass.DisplayMember = localLicense.ClassName;
-            ctrlPersonCardWithFilter1.LoadPersonInfo(App.ApplicantPersonID);
 
             int AppTypeID = (int)ApplicationTypeService.EnApplicationType.NewLocalDrivingLicenseService;
             _applicationType = await _applicationTypeService.GetApplicationTypeByIdAsync(AppTypeID);
             lblFees.Text = _applicationType.ApplicationFees.ToString();
 
             lblCreatedByUser.Text = clsGlobal.GetUser.ID.ToString();
-
+            ctrlPersonCardWithFilter1.LoadPersonInfo(App.ApplicantPersonID);
         }
-        private void SaveApplication()
-        {
 
-        }
         private void ctrlPersonCardWithFilter1_OnPersonSelected(int obj)
         {
+            if (obj == -1)
+                return;
+
             _PersonID = obj;
         }
 
-
         private async void btnSave_Click(object sender, EventArgs e)
         {
-            if(_Mod == eMod.Add)
+            
+            if (_Mod == eMod.Add)
             {
                 var Application = new clsApplication()
                 {
@@ -185,7 +196,14 @@ namespace DVLD.Applications.Local_Driving_License
                     PaidFees = _applicationType.ApplicationFees
                 };
 
-            
+                int ActiveApplicationID = await _LocalapplicationService.HasApplication(ctrlPersonCardWithFilter1.PersonID, (int)cbLicenseClass.SelectedValue);
+                if (ActiveApplicationID ==1)
+                {
+                    MessageBox.Show("Choose another License Class, the selected Person Already have an active application for the selected class with id=" + ActiveApplicationID, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    cbLicenseClass.Focus();
+                    return;
+                }
+
                 if (Application != null)
                 {
                   var app =  await applicationService.AddApplicationAsync(Application);

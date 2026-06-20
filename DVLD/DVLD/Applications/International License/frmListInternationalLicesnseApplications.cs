@@ -4,8 +4,10 @@ using DVLD.Peoples;
 using DVLDServices.Extentions;
 using DVLDServices.Services;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
+using static DVLDServices.Services.InternationalLicenseService;
 
 namespace DVLD.Applications.International_License
 {
@@ -29,18 +31,33 @@ namespace DVLD.Applications.International_License
 
         private async void frmListInternationalLicesnseApplications_Load(object sender, EventArgs e)
         {
-            if (cbFilterBy.Items.Count > 0)
-                cbFilterBy.SelectedIndex = 0;
-
-            if (cbFilterBy.Text == "None")
-                txtFilterValue.Visible = false;
-
-
+            try
+            {
+  
             var list = await InternationalLicenseService.GetInternationalLicensesAsync();
-            if (list is null)
-                return;
-            _dtInternationalLicenseApplications = DatatableExtention.ToDataTable(list);
-            dgvInternationalLicenses.DataSource = _dtInternationalLicenseApplications;
+            if (list != null)
+            {
+                _dtInternationalLicenseApplications = DatatableExtention.ToDataTable(list);
+                dgvInternationalLicenses.DataSource = _dtInternationalLicenseApplications;
+            }
+            else
+                dgvInternationalLicenses.DataSource = null;
+            }
+            catch
+            {
+                List<InternationalLicenseDto> emptyList =
+                    new List<InternationalLicenseDto>();
+                dgvInternationalLicenses.DataSource = emptyList;
+
+            }
+            finally
+            {
+                if (cbFilterBy.Items.Count > 0)
+                    cbFilterBy.SelectedIndex = 0;
+
+                if (cbFilterBy.Text == "None")
+                    txtFilterValue.Visible = false;
+            }
         }
 
         private async void PesonDetailsToolStripMenuItem_Click(object sender, EventArgs e)

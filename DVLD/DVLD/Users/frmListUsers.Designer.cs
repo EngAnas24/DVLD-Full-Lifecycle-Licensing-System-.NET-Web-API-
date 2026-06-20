@@ -69,6 +69,7 @@
             this.cbIsActive.Size = new System.Drawing.Size(121, 21);
             this.cbIsActive.TabIndex = 114;
             this.cbIsActive.Visible = false;
+            this.cbIsActive.SelectedIndexChanged += new System.EventHandler(this.cbIsActive_SelectedIndexChanged);
             // 
             // btnClose
             // 
@@ -161,7 +162,7 @@
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
             this.deleteToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.deleteToolStripMenuItem.Text = "&Delete";
-            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click_1);
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
             // ChangePasswordtoolStripMenuItem
             // 
@@ -169,6 +170,7 @@
             this.ChangePasswordtoolStripMenuItem.Name = "ChangePasswordtoolStripMenuItem";
             this.ChangePasswordtoolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.ChangePasswordtoolStripMenuItem.Text = "Change &Password";
+            this.ChangePasswordtoolStripMenuItem.Click += new System.EventHandler(this.ChangePasswordtoolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -233,6 +235,7 @@
             this.txtFilterValue.Size = new System.Drawing.Size(256, 20);
             this.txtFilterValue.TabIndex = 106;
             this.txtFilterValue.Visible = false;
+            this.txtFilterValue.TextChanged += new System.EventHandler(this.txtFilterValue_TextChanged);
             // 
             // label1
             // 

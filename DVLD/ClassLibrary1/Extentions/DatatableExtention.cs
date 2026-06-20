@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,25 +10,34 @@ namespace DVLDServices.Extentions
 {
    public static class DatatableExtention
     {
-        public static DataTable ToDataTable<T>(List<T> items)
+        public static DataTable ToDataTable<T>(this IEnumerable<T> items)
         {
             DataTable dataTable = new DataTable(typeof(T).Name);
-            var props = typeof(T).GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-            foreach (var prop in props)
+            PropertyInfo[] props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            foreach (PropertyInfo prop in props)
             {
-                dataTable.Columns.Add(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
+                Type columnType = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
+                dataTable.Columns.Add(prop.Name, columnType);
             }
-            foreach (var item in items)
+
+            if (items == null)
+            {
+                return dataTable;
+            }
+
+            foreach (T item in items)
             {
                 var values = new object[props.Length];
                 for (int i = 0; i < props.Length; i++)
                 {
-                    values[i] = props[i].GetValue(item, null);
+                    object value = props[i].GetValue(item, null);
+                    values[i] = value ?? DBNull.Value;
                 }
                 dataTable.Rows.Add(values);
             }
+
             return dataTable;
         }
-
     }
 }

@@ -76,6 +76,7 @@
     <Compile Include="GlobalClasses\clsFormat.cs" />
     <Compile Include="GlobalClasses\clsGlobal.cs" />
     <Compile Include="Services\clsApplicationService.cs" />
+    <Compile Include="Services\DetainedLicenseService.cs" />
     <Compile Include="Services\InternationalLicenseService.cs" />
     <Compile Include="Services\LicenseService.cs" />
     <Compile Include="Services\LicenseClassService.cs" />

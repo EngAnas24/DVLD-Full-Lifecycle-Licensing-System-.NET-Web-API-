@@ -162,18 +162,20 @@
             this.btnClose.TabIndex = 194;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = true;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // btnRelease
             // 
             this.btnRelease.Enabled = false;
             this.btnRelease.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRelease.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnRelease.Location = new System.Drawing.Point(761, 705);
+            this.btnRelease.Location = new System.Drawing.Point(706, 56);
             this.btnRelease.Name = "btnRelease";
             this.btnRelease.Size = new System.Drawing.Size(126, 37);
             this.btnRelease.TabIndex = 195;
             this.btnRelease.Text = "Release";
             this.btnRelease.UseVisualStyleBackColor = true;
+            this.btnRelease.Click += new System.EventHandler(this.btnRelease_Click);
             // 
             // label5
             // 
@@ -218,6 +220,7 @@
             this.llShowLicenseHistory.TabIndex = 196;
             this.llShowLicenseHistory.TabStop = true;
             this.llShowLicenseHistory.Text = "Show Licenses History";
+            this.llShowLicenseHistory.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llShowLicenseHistory_LinkClicked);
             // 
             // errorProvider1
             // 
@@ -233,6 +236,7 @@
             this.llShowLicenseInfo.TabIndex = 197;
             this.llShowLicenseInfo.TabStop = true;
             this.llShowLicenseInfo.Text = "Show Licenses Info";
+            this.llShowLicenseInfo.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llShowLicenseInfo_LinkClicked);
             // 
             // lblFineFees
             // 
@@ -316,6 +320,7 @@
             this.gpDetain.Controls.Add(this.pictureBox7);
             this.gpDetain.Controls.Add(this.lblApplicationID);
             this.gpDetain.Controls.Add(this.lblTotalFees);
+            this.gpDetain.Controls.Add(this.btnRelease);
             this.gpDetain.Controls.Add(this.label8);
             this.gpDetain.Controls.Add(this.label7);
             this.gpDetain.Controls.Add(this.pictureBox6);
@@ -419,10 +424,12 @@
             // 
             // ctrlDriverLicenseInfoWithFilter1
             // 
+            this.ctrlDriverLicenseInfoWithFilter1.FilterEnabled = true;
             this.ctrlDriverLicenseInfoWithFilter1.Location = new System.Drawing.Point(15, 66);
             this.ctrlDriverLicenseInfoWithFilter1.Name = "ctrlDriverLicenseInfoWithFilter1";
             this.ctrlDriverLicenseInfoWithFilter1.Size = new System.Drawing.Size(965, 441);
             this.ctrlDriverLicenseInfoWithFilter1.TabIndex = 198;
+            this.ctrlDriverLicenseInfoWithFilter1.OnLicenseSelected += new System.Action<int>(this.ctrlDriverLicenseInfoWithFilter1_OnLicenseSelected);
             // 
             // frmReleaseDetainedLicenseApplication
             // 
@@ -432,7 +439,6 @@
             this.Controls.Add(this.ctrlDriverLicenseInfoWithFilter1);
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.btnClose);
-            this.Controls.Add(this.btnRelease);
             this.Controls.Add(this.llShowLicenseHistory);
             this.Controls.Add(this.llShowLicenseInfo);
             this.Controls.Add(this.gpDetain);

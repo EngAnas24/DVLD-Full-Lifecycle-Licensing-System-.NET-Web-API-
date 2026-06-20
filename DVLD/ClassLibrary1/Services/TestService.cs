@@ -157,12 +157,12 @@ namespace DVLDServices.Services
                 throw new Exception("تعذر الاتصال بالسيرفر. تأكد من تشغيل الـ API.");
             }
         }
-        public async Task<LastTestResult> GetLastTest(int LicenseClassID ,int ApplicantPersonID ,int TestTypeID)
+        public async Task<LastTestResult> GetLastTest(int LicenseClassID, int ApplicantPersonID, int TestTypeID)
         {
             try
             {
 
-                var response = await _httpClient.GetAsync($"GetLastTest /{ LicenseClassID}/{ ApplicantPersonID}/{ TestTypeID}");
+                var response = await _httpClient.GetAsync($"api/Test/GetLastTest/{LicenseClassID}/{ApplicantPersonID}/{TestTypeID}");
 
                 if (response.IsSuccessStatusCode)
                 {

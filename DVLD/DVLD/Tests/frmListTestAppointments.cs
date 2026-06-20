@@ -12,28 +12,29 @@ using System.Windows.Forms;
 using static DVLDServices.Services.LocalDrivingLicesnseApplicationsService;
 using static DVLDServices.Services.TestAppointmentService;
 using static DVLDServices.Services.TestService;
-
+using System.Collections.Generic;
 namespace DVLD.Tests
 {
     public partial class frmListTestAppointments : Form
     {
-        private int _LocalAppID;
+        private readonly int _LocalAppID;
         private int _TestAppointmentID;
-        private TestAppointmentService _AppointmentService;
-        private clsApplicationService _applicationService;
-        private TestService _testService;
-        private LocalDrivingLicesnseApplicationsService _DrivingLicesnseApplicationsService;
-        DataTable dataTable;
-        private enTestType _enTestType =  enTestType.VisionTest;
+        private readonly TestAppointmentService _AppointmentService;
+        private readonly clsApplicationService _applicationService;
+        private readonly TestService _testService;
+        private readonly LocalDrivingLicesnseApplicationsService _DrivingLicesnseApplicationsService;
+        private DataTable dataTable;
+        private readonly enTestType _enTestType = enTestType.VisionTest;
+
         private static readonly System.Net.Http.HttpClient _httpClient = new System.Net.Http.HttpClient
         {
-            BaseAddress = new Uri("http://localhost:5067/") // تأكد من وجود الـ / في النهاية
+            BaseAddress = new Uri("http://localhost:5067/")
         };
 
-        public frmListTestAppointments(int LocalAppID, enTestType testType)
+        public frmListTestAppointments(int localAppID, enTestType testType)
         {
             InitializeComponent();
-            _LocalAppID = LocalAppID;
+            _LocalAppID = localAppID;
             _AppointmentService = new TestAppointmentService(_httpClient);
             _enTestType = testType;
             _testService = new TestService(_httpClient);
@@ -43,90 +44,102 @@ namespace DVLD.Tests
 
         public async void frmListTestAppointments_Load(object sender, EventArgs e)
         {
-          await  ctrlDrivingLicenseApplicationInfo1.LoadData(_LocalAppID);
-                 LoadData();
+            this.Cursor = Cursors.WaitCursor;
+            try
+            {
+                await ctrlDrivingLicenseApplicationInfo1.LoadData(_LocalAppID);
+                await LoadData();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"حدث خطأ أثناء تحميل الصفحة: {ex.Message}", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                this.Cursor = Cursors.Default;
+            }
         }
 
-        private async void btnAddNewAppointment_Click(object sender, EventArgs e)
+        private async  void btnAddNewAppointment_Click(object sender, EventArgs e)
         {
-            var localapp = await _DrivingLicesnseApplicationsService.GetLocalApplicationByIdAsync(_LocalAppID);
-            var app = await _applicationService.GetApplicationByIdAsync(localapp.ApplicationID);
-            int isFound  = await _AppointmentService.IsThereAnActiveScheduledTest(_LocalAppID, (int)_enTestType);
-            if (isFound == 1)
-            {
-                MessageBox.Show("Person Already have an active appointment for this test, You cannot add new appointment", "Not allowed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+            frmScheduleTest frm = new frmScheduleTest(_LocalAppID, _enTestType, -1);
+            frm.ShowDialog();
 
-            var Class = await _testService.GetClassID(localapp.ClassName);
-            LastTestResult LastTest = await _testService.GetLastTest(Class.LicenseClassID, app.ApplicantPersonID, (int)_enTestType);
-
-            if (LastTest == null)
-            {
-                frmScheduleTest frm1 = new frmScheduleTest(_LocalAppID,_enTestType,_TestAppointmentID);
-                frm1.ShowDialog();
-                frmListTestAppointments_Load(null, null);
-                return;
-            }
-
-            //if person already passed the test s/he cannot retak it.
-            if (LastTest.TestResult == true)
-            {
-                MessageBox.Show("This person already passed this test before, you can only retake faild test", "Not Allowed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            frmScheduleTest frm2 = new frmScheduleTest
-                (_LocalAppID,_enTestType,_TestAppointmentID);
-            frm2.ShowDialog();
-            frmListTestAppointments_Load(null, null);
-            //---
+            await LoadData();
         }
-
-        private async void LoadData()
+        private async Task LoadData()
         {
             try
             {
-                var TestAppointment = await _AppointmentService.GetTestAppointmentByLocalAppIdAndTestTypeIdAsync(_LocalAppID, (int)_enTestType);
+                var testAppointments = await _AppointmentService.GetTestAppointmentByLocalAppIdAndTestTypeIdAsync(_LocalAppID, (int)_enTestType);
 
-                if (TestAppointment is null || TestAppointment.Count == 0)
+                dgvLicenseTestAppointments.DataSource = null;
+
+                if (testAppointments is null || testAppointments.Count == 0)
                 {
-                    dgvLicenseTestAppointments.DataSource = null;
                     return;
                 }
 
-                dataTable = DatatableExtention.ToDataTable(TestAppointment);
-                dgvLicenseTestAppointments.DataSource = dataTable;
+                dataTable = DatatableExtention.ToDataTable(testAppointments);
+
+                BindingSource bindingSource = new BindingSource();
+                bindingSource.DataSource = dataTable;
+
+                dgvLicenseTestAppointments.DataSource = bindingSource;
 
                 if (dgvLicenseTestAppointments.Columns.Count > 0)
                 {
-                    dgvLicenseTestAppointments.Columns["TestTypeID"].Visible = false;
                     dgvLicenseTestAppointments.Columns["LocalDrivingLicenseApplicationID"].Visible = false;
-                    dgvLicenseTestAppointments.Columns["CreatedByUserID"].Visible = false;
                     dgvLicenseTestAppointments.Columns["RetakeTestApplicationID"].Visible = false;
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show($"خطأ أثناء تحديث بيانات الجدول: {ex.Message}", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                List<TestAppointmentDto> emptyList = new List<TestAppointmentDto>();
+                BindingSource bindingSource = new BindingSource();
+                bindingSource.DataSource = emptyList;
+
             }
         }
 
-        private void editToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void editToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _TestAppointmentID = (int) dgvLicenseTestAppointments.CurrentRow.Cells["TestAppointmentID"].Value;
+            if (dgvLicenseTestAppointments.CurrentRow == null) return;
 
-            frmScheduleTest frmSchedule = new frmScheduleTest(_LocalAppID, _enTestType,_TestAppointmentID);
-            frmSchedule.ShowDialog();
-            frmListTestAppointments_Load(null, null);
+            _TestAppointmentID = (int)dgvLicenseTestAppointments.CurrentRow.Cells["TestAppointmentID"].Value;
+            int LocalAppID = (int)dgvLicenseTestAppointments.CurrentRow.Cells["LocalDrivingLicenseApplicationID"].Value;
+
+            frmScheduleTest frmSchedule = new frmScheduleTest(LocalAppID, _enTestType, _TestAppointmentID);
+
+            if (frmSchedule.ShowDialog() == DialogResult.OK)
+            {
+                await LoadData();
+            }
+            else
+            {
+                await Task.Delay(200);
+                await LoadData();
+            }
         }
 
-        private void takeTestToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void takeTestToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (dgvLicenseTestAppointments.CurrentRow == null) return;
+
             _TestAppointmentID = (int)dgvLicenseTestAppointments.CurrentRow.Cells["TestAppointmentID"].Value;
+
             frmTakeTest frmTake = new frmTakeTest(_LocalAppID, _enTestType, _TestAppointmentID);
-            frmTake.ShowDialog();
-            frmListTestAppointments_Load(null, null);
+
+            if (frmTake.ShowDialog() == DialogResult.OK)
+            {
+                await LoadData();
+            }
+            else
+            {
+                await Task.Delay(200);
+                await LoadData();
+            }
         }
     }
 }

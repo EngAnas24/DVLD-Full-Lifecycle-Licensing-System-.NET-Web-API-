@@ -140,6 +140,7 @@
             this.showLicenseInfoToolStripMenuItem.Name = "showLicenseInfoToolStripMenuItem";
             this.showLicenseInfoToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.showLicenseInfoToolStripMenuItem.Text = "Show License Info";
+            this.showLicenseInfoToolStripMenuItem.Click += new System.EventHandler(this.showLicenseInfoToolStripMenuItem_Click);
             // 
             // tcDriverLicenses
             // 

@@ -21,7 +21,7 @@ namespace DVLD.Peoples
         private readonly PeopleService _peopleService;
         private static readonly System.Net.Http.HttpClient _httpClient = new System.Net.Http.HttpClient
         {
-            BaseAddress = new Uri("http://localhost:5067/") // تأكد من وجود الـ / في النهاية
+            BaseAddress = new Uri("http://localhost:5067/") 
         };
         private enMode _Mode;
         private int _PersonID=-1;
@@ -31,7 +31,6 @@ namespace DVLD.Peoples
         public delegate void DataBackEventHandler(object sender, int PersonID);
         private DataTable _dtAllContries;
 
-        // Declare an event using the delegate
         public event DataBackEventHandler DataBack;
         public frmAddUpdatePerson(int PersonID)
         {
@@ -64,7 +63,6 @@ namespace DVLD.Peoples
         {
             if (!this.ValidateChildren())
             {
-                //Here we dont continue becuase the form is not valid
                 MessageBox.Show("Some fileds are not valide!, put the mouse over the red icon(s) to see the erro", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
@@ -98,7 +96,6 @@ namespace DVLD.Peoples
             if (_PersonID <= 0)
             {
                 _person = await _peopleService.AddPersonAsync(_person);
-                //change form mode to update.
                 _Mode = enMode.Update;
                 lblTitle.Text = "Update Person";
 
@@ -112,7 +109,7 @@ namespace DVLD.Peoples
                 lblPersonID.Text = _person.PersonalID.ToString();
                 MessageBox.Show("Data Saved Successfully.", "Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                //  DataBack.Invoke(this, _person.PersonalID);
+                 // DataBack.Invoke(this, _person.PersonalID);
             }
             else
                 MessageBox.Show("Error: Data Is not Saved Successfully.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -127,7 +124,6 @@ namespace DVLD.Peoples
         {
             if (!string.IsNullOrEmpty(_selectedImagePath) && File.Exists(_selectedImagePath))
             {
-                // نستخدم result.PersonalID القادم من السيرفر
                 bool isUploaded = await _peopleService.UploadPersonImage(_person.PersonalID, _selectedImagePath);
 
                 if (!isUploaded)
@@ -149,7 +145,6 @@ namespace DVLD.Peoples
                 return;
             }
 
-            //the following code will not be executed if the person was not found
             lblPersonID.Text = _PersonID.ToString();
             txtFirstName.Text = _Person.FirstName;
             txtSecondName.Text = _Person.SecondName;
@@ -184,23 +179,18 @@ namespace DVLD.Peoples
             {
                 lblTitle.Text = "Update Person";
             }
-            //set default image for the person.
             if (rbMale.Checked)
                 pbPersonImage.Image = Resources.Male_512;
             else
                 pbPersonImage.Image = Resources.Female_512;
 
-            //hide/show the remove linke incase there is no image for the person.
             llRemoveImage.Visible = (pbPersonImage.ImageLocation != null);
 
-            //we set the max date to 18 years from today, and set the default value the same.
             dtpDateOfBirth.MaxDate = DateTime.Now.AddYears(-18);
             dtpDateOfBirth.Value = dtpDateOfBirth.MaxDate;
 
-            //should not allow adding age more than 100 years
             dtpDateOfBirth.MinDate = DateTime.Now.AddYears(-100);
 
-            //this will set default country to jordan.
             cbCountry.SelectedIndex = cbCountry.FindString("Yemen");
 
             txtFirstName.Text = "";
@@ -242,37 +232,33 @@ namespace DVLD.Peoples
 
                     _selectedImagePath = openFileDialog.FileName;
 
-                    // استخدام ImageLocation يمنع قفل الملف ويسمح بتغييره لاحقاً
                     pbPersonImage.ImageLocation = _selectedImagePath;
 
-                    // ملاحظة: هنا يجب استدعاء دالة الرفع للسيرفر (UploadToApi)
                 }
             }
         }
 
         private void DisplayPersonImage(string imageName)
         {
-            // تعريف المسار الافتراضي في البداية ليكون متاحاً للكل
-            string defaultPath = Path.Combine("D:\\c#\\Asp.NetWebApi\\DVLD\\DVLD\\wwwroot\\uploads\\people\\", "default.png");
+
+            string baseApiUrl = "http://localhost:5067/uploads/people/";
+            string defaultImage = baseApiUrl + "default.png";
 
             if (string.IsNullOrEmpty(imageName))
             {
-                ShowDefaultImage(defaultPath);
+                pbPersonImage.LoadAsync(defaultImage);
                 return;
             }
 
-            string baseUrl = "D:\\c#\\Asp.NetWebApi\\DVLD\\DVLD\\wwwroot\\uploads\\people\\";
-            string fullUrl = baseUrl + imageName;
+            string fullUrl = baseApiUrl + imageName;
 
             try
             {
-                // إضافة رقم عشوائي للرابط لمنع الكاش (Caching) في الـ WinForms
-                // ليظهر التحديث فوراً إذا تغيرت الصورة بنفس الاسم
                 pbPersonImage.LoadAsync(fullUrl);
             }
             catch
             {
-                ShowDefaultImage(defaultPath);
+                pbPersonImage.LoadAsync(defaultImage);
             }
         }
 
@@ -295,29 +281,24 @@ namespace DVLD.Peoples
 
         private async void llRemoveImage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            // 1. التأكد من أن المستخدم يريد الحذف فعلاً
             if (MessageBox.Show("Are you sure you want to delete this image?", "Confirm",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                 return;
 
             try
             {
-                // 2. استدعاء خدمة الحذف من الـ API
                 bool isDeleted = await _peopleService.DeleteImagePersonAsync(_PersonID);
 
                 if (isDeleted)
                 {
-                    // 3. تحديث واجهة المستخدم
-                    // إرجاع الصورة الافتراضية (Default Image) بناءً على النوع
+       
                     if (rbMale.Checked)
-                        pbPersonImage.Image = Resources.Male_512; // استبدلها باسم الصورة لديك في الـ Resources
+                        pbPersonImage.Image = Resources.Male_512; 
                     else
                         pbPersonImage.Image = Resources.Female_512;
 
-                    // إخفاء رابط الحذف لأن الصورة حُذفت
                     llRemoveImage.Visible = false;
 
-                    // تصفير الـ ImageLocation لضمان عدم حدوث تعارض عند الحفظ
                     pbPersonImage.ImageLocation = null;
 
                     MessageBox.Show("Image deleted successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);

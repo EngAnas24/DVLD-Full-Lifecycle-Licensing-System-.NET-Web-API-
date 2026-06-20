@@ -23,5 +23,10 @@ namespace DVLD.Peoples
             // استدعاء الدالة مباشرة بعد تهيئة المكونات
             ctrlPersonCard1.LoadPersonInfo(_PersonID);
         }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }

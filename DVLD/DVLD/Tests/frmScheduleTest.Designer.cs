@@ -28,17 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.crlScheduleTest1 = new DVLD.Tests.Controls.ctrlScheduleTest();
             this.button1 = new System.Windows.Forms.Button();
+            this.crlScheduleTest1 = new DVLD.Tests.Controls.ctrlScheduleTest();
             this.SuspendLayout();
-            // 
-            // crlScheduleTest1
-            // 
-            this.crlScheduleTest1.enTestType = DVLDServices.Services.TestAppointmentService.enTestType.VisionTest;
-            this.crlScheduleTest1.Location = new System.Drawing.Point(12, 12);
-            this.crlScheduleTest1.Name = "crlScheduleTest1";
-            this.crlScheduleTest1.Size = new System.Drawing.Size(530, 715);
-            this.crlScheduleTest1.TabIndex = 0;
             // 
             // button1
             // 
@@ -52,6 +44,14 @@
             this.button1.Text = "X";
             this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // crlScheduleTest1
+            // 
+            this.crlScheduleTest1.enTestType = DVLDServices.Services.TestAppointmentService.enTestType.VisionTest;
+            this.crlScheduleTest1.Location = new System.Drawing.Point(12, 12);
+            this.crlScheduleTest1.Name = "crlScheduleTest1";
+            this.crlScheduleTest1.Size = new System.Drawing.Size(530, 715);
+            this.crlScheduleTest1.TabIndex = 0;
             // 
             // frmScheduleTest
             // 

@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static DVLDServices.Services.clsApplicationService;
+using static DVLDServices.Services.LocalDrivingLicesnseApplicationsService;
 using static DVLDServices.Services.TestAppointmentService;
 
 namespace DVLD.Applications.Local_Driving_License
@@ -55,70 +56,130 @@ namespace DVLD.Applications.Local_Driving_License
 
         private async void cmsApplications_Opening(object sender, CancelEventArgs e)
         {
-            int LocalAppID = (int)dgvLocalDrivingLicenseApplications.CurrentRow.Cells["LocalDrivingLicenseApplicationID"].Value;
-
-
-
-            bool PassedVisionTest = await _testAppointmentService.CheckIfPassedTest(LocalAppID, (int)TestAppointmentService.enTestType.VisionTest);
-            bool PassedWrittenTest = await _testAppointmentService.CheckIfPassedTest(LocalAppID, (int)TestAppointmentService.enTestType.WrittenTest);
-            bool PassedStreetTest = await _testAppointmentService.CheckIfPassedTest(LocalAppID, (int)TestAppointmentService.enTestType.StreetTest);
-
-            ScheduleTestsMenue.Enabled = (!PassedVisionTest || !PassedWrittenTest || !PassedStreetTest);
-
-            var LocalApp = await _LocalappService.GetLocalApplicationByIdAsync(LocalAppID);
-            var App = await _applicationService.GetApplicationByIdAsync(LocalApp.ApplicationID);
-
-            if (App.ApplicationStatus == (int)EnApplicationStatus.Cancelled)
+            try
             {
-                ScheduleTestsMenue.Enabled = false;
-                issueDrivingLicenseFirstTimeToolStripMenuItem.Enabled = false;
-                CancelApplicaitonToolStripMenuItem.Enabled = false;
-                DeleteApplicationToolStripMenuItem.Enabled = false;
-                editToolStripMenuItem.Enabled = false;
-                showLicenseToolStripMenuItem.Enabled = false;
+                if (dgvLocalDrivingLicenseApplications.CurrentRow == null)
+                {
+                    e.Cancel = true;
+                    return;
+                }
 
+                int localAppID = (int)dgvLocalDrivingLicenseApplications.CurrentRow.Cells["LocalDrivingLicenseApplicationID"].Value;
+                int applicationID = (int)dgvLocalDrivingLicenseApplications.CurrentRow.Cells["ApplicationID"].Value;
+
+                ResetContextMenuItems(true);
+
+                var visionTestTask = _testAppointmentService.CheckIfPassedTest(localAppID, (int)TestAppointmentService.enTestType.VisionTest);
+                var writtenTestTask = _testAppointmentService.CheckIfPassedTest(localAppID, (int)TestAppointmentService.enTestType.WrittenTest);
+                var streetTestTask = _testAppointmentService.CheckIfPassedTest(localAppID, (int)TestAppointmentService.enTestType.StreetTest);
+                var localAppTask = _LocalappService.GetLocalApplicationByIdAsync(localAppID);
+                var licenseTask = _licenseService.GetLicenseByApplicationIdAsync(applicationID);
+
+                await Task.WhenAll(visionTestTask, writtenTestTask, streetTestTask, localAppTask, licenseTask);
+
+                bool passedVisionTest = visionTestTask.Result;
+                bool passedWrittenTest = writtenTestTask.Result;
+                bool passedStreetTest = streetTestTask.Result;
+                var localApp = localAppTask.Result;
+                var licenseInfo = licenseTask.Result;
+
+                var app = await _applicationService.GetApplicationByIdAsync(localApp.ApplicationID);
+
+                int licenseID = -1;
+                if (licenseInfo != null)
+                {
+                    licenseID = await _licenseService.GetLicenseByPersonIdAsync(licenseInfo.ID, licenseInfo.LicenseClassID);
+                }
+
+
+                if (app.ApplicationStatus == (int)EnApplicationStatus.Cancelled)
+                {
+                    ResetContextMenuItems(false); 
+                    showDetailsToolStripMenuItem.Enabled = true; 
+                    showPersonLicenseHistoryToolStripMenuItem.Enabled = true; 
+                    return; 
+                }
+
+                else if (app.ApplicationStatus == (int)EnApplicationStatus.Completed || licenseID > 0)
+                {
+                    CancelApplicaitonToolStripMenuItem.Enabled = false;
+                    DeleteApplicationToolStripMenuItem.Enabled = false;
+                    editToolStripMenuItem.Enabled = false;
+                    ScheduleTestsMenue.Enabled = false;
+                    issueDrivingLicenseFirstTimeToolStripMenuItem.Enabled = false;
+
+                    showLicenseToolStripMenuItem.Enabled = true;
+                    showDetailsToolStripMenuItem.Enabled = true;
+                    showPersonLicenseHistoryToolStripMenuItem.Enabled = true;
+                }
+
+                else if (app.ApplicationStatus == (int)EnApplicationStatus.New)
+                {
+                    CancelApplicaitonToolStripMenuItem.Enabled = true;
+                    DeleteApplicationToolStripMenuItem.Enabled = true;
+                    editToolStripMenuItem.Enabled = true;
+
+                    showLicenseToolStripMenuItem.Enabled = false;
+
+                    if (passedStreetTest)
+                    {
+                        issueDrivingLicenseFirstTimeToolStripMenuItem.Enabled = true;
+                        ScheduleTestsMenue.Enabled = false;
+                    }
+                    else
+                    {
+                        issueDrivingLicenseFirstTimeToolStripMenuItem.Enabled = false;
+
+                        ScheduleTestsMenue.Enabled = (!passedVisionTest || !passedWrittenTest || !passedStreetTest);
+                        if (ScheduleTestsMenue.Enabled)
+                        {
+                            scheduleVisionTestToolStripMenuItem.Enabled = !passedVisionTest;
+                            scheduleWrittenTestToolStripMenuItem.Enabled = passedVisionTest && !passedWrittenTest;
+                            scheduleStreetTestToolStripMenuItem.Enabled = passedVisionTest && passedWrittenTest && !passedStreetTest;
+                        }
+                    }
+                }
             }
-            if (App.ApplicationStatus == (int)clsApplicationService.EnApplicationStatus.New)
+            catch (Exception ex)
             {
-                CancelApplicaitonToolStripMenuItem.Enabled = true;
-                DeleteApplicationToolStripMenuItem.Enabled = true;
-                editToolStripMenuItem.Enabled = true;
+                MessageBox.Show($"حدث خطأ غير متوقع أثناء تحديث قائمة الخيارات: {ex.Message}", "خطأ في النظام", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-
-            if (!PassedStreetTest)
-            {
-                issueDrivingLicenseFirstTimeToolStripMenuItem.Enabled = false;
-                showLicenseToolStripMenuItem.Enabled = false;
-            }
-            if (ScheduleTestsMenue.Enabled)
-            {
-                scheduleVisionTestToolStripMenuItem.Enabled = !PassedVisionTest;
-                scheduleWrittenTestToolStripMenuItem.Enabled = PassedVisionTest && !PassedWrittenTest;
-                scheduleStreetTestToolStripMenuItem.Enabled = PassedVisionTest && PassedWrittenTest && !PassedStreetTest;
-
-            }
-
-            int ApplicationID = (int)dgvLocalDrivingLicenseApplications.CurrentRow.Cells["ApplicationID"].Value;
-            var licinfo = await _licenseService.GetLicenseByApplicationIdAsync(ApplicationID);
-            int licID = await _licenseService.GetLicenseByPersonIdAsync(licinfo.ID, licinfo.LicenseClassID);
-
-            if (licID > 0)
-            {
-                issueDrivingLicenseFirstTimeToolStripMenuItem.Enabled = false;
-                CancelApplicaitonToolStripMenuItem.Enabled = false;
-                DeleteApplicationToolStripMenuItem.Enabled = false;
-                editToolStripMenuItem.Enabled = false;
-            }
-              
-
         }
-
+        
+        private void ResetContextMenuItems(bool enabled)
+        {
+            ScheduleTestsMenue.Enabled = enabled;
+            issueDrivingLicenseFirstTimeToolStripMenuItem.Enabled = enabled;
+            CancelApplicaitonToolStripMenuItem.Enabled = enabled;
+            DeleteApplicationToolStripMenuItem.Enabled = enabled;
+            editToolStripMenuItem.Enabled = enabled;
+            showLicenseToolStripMenuItem.Enabled = enabled;
+            showDetailsToolStripMenuItem.Enabled = enabled;
+            showPersonLicenseHistoryToolStripMenuItem.Enabled = enabled;
+        }
+        
         private async void _LoadData()
         {
+            try
+            {
             var LocalApps = await _LocalappService.GetLocalApplicationsAsync();
             dataTable = DatatableExtention.ToDataTable(LocalApps);
             dgvLocalDrivingLicenseApplications.DataSource = dataTable;
+            }
+            catch
+            {
+                List<LocalDrivingLicenseApplicationsDto> emptyList
+                    = new List<LocalDrivingLicenseApplicationsDto>();
+                dgvLocalDrivingLicenseApplications.DataSource = emptyList;
+            }
+            finally
+            {
+                if (cbFilterBy.Items.Count > 0)
+                    cbFilterBy.SelectedIndex = 0;
+
+                if (cbFilterBy.Text == "None")
+                    txtFilterValue.Visible = false;
+            }
         }
 
         private void showDetailsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -140,7 +201,8 @@ namespace DVLD.Applications.Local_Driving_License
                 new frmAddUpdateLocalDrivingLicesnseApplication(LocalAppID);
            
             frmAddUpdateLocal.ShowDialog();
-            frmAddUpdateLocal.frmAddUpdateLocalDrivingLicesnseApplication_Load(null, null);
+            _LoadData();
+
         }
 
         private async void DeleteApplicationToolStripMenuItem_Click(object sender, EventArgs e)
@@ -201,7 +263,7 @@ namespace DVLD.Applications.Local_Driving_License
             int LocalAppID = (int)dgvLocalDrivingLicenseApplications.CurrentRow.Cells["LocalDrivingLicenseApplicationID"].Value;
             frmListTestAppointments listTestAppointments = new frmListTestAppointments(LocalAppID, TestType);
             listTestAppointments.ShowDialog();
-            listTestAppointments.frmListTestAppointments_Load(null, null);
+            _LoadData();
         }
 
         private void scheduleVisionTestToolStripMenuItem_Click(object sender, EventArgs e)
@@ -226,8 +288,9 @@ namespace DVLD.Applications.Local_Driving_License
             int LocalDrivingLicenseApplicationID = (int)dgvLocalDrivingLicenseApplications.CurrentRow.Cells[0].Value;
             frmIssueDriverLicenseFirstTime frm = new frmIssueDriverLicenseFirstTime(LocalDrivingLicenseApplicationID);
             frm.ShowDialog();
+            _LoadData();
+
             //refresh
-            frmListLocalDrivingLicesnseApplications_Load(null, null);
         }
 
         private async void showLicenseToolStripMenuItem_Click(object sender, EventArgs e)
@@ -258,12 +321,13 @@ namespace DVLD.Applications.Local_Driving_License
         {
             frmAddUpdateLocalDrivingLicesnseApplication FrmAdd = new frmAddUpdateLocalDrivingLicesnseApplication();
             FrmAdd.ShowDialog();
-            frmListLocalDrivingLicesnseApplications_Load(null, null);
+
+            _LoadData();
+
         }
 
         private void cbFilterBy_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // 1. Safety Check: If dataTable hasn't been initialized yet, stop here.
             if (dataTable == null)
                 return;
 

@@ -65,7 +65,6 @@ namespace DVLD.Applications.Renew_Local_License
             lblCreatedByUser.Text = clsGlobal.GetUser.UserName;
             lblLicenseFees.Text = Lic.PaidFees.ToString();
             lblTotalFees.Text = (Convert.ToSingle(lblApplicationFees.Text) + Convert.ToSingle(lblLicenseFees.Text)).ToString();
-            ctrlDriverLicenseInfoWithFilter1.LoadLicenseInfo(_LicenseID);
         }
 
         private async void btnRenewLicense_Click(object sender, EventArgs e)
@@ -73,6 +72,14 @@ namespace DVLD.Applications.Renew_Local_License
             var Lic = await _licenseService.GetLicenseByIdAsync(_LicenseID);
             var app = await _applicationService.GetApplicationByIdAsync(Lic.ApplicationID);
             var Licenseclass = await _ClassService.GetLicenseClassByIdAsync(Lic.LicenseClass);
+
+            if (Lic.IsActive != 1)
+            {
+                MessageBox.Show("Selected License is not Active, choose an active license."
+                    , "Not allowed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                btnRenewLicense.Enabled = false;
+                return;
+            }
 
             //check the license is not Expired.
             if (Lic.ExpirationDate >= DateTime.Now)
@@ -82,15 +89,6 @@ namespace DVLD.Applications.Renew_Local_License
                 btnRenewLicense.Enabled = false;
                 return;
             }
-            //check the license is not not active.
-            if (Lic.IsActive != 1)
-            {
-                MessageBox.Show("Selected License is not Not Active, choose an active license."
-                    , "Not allowed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                btnRenewLicense.Enabled = false;
-                return;
-            }
-
             btnRenewLicense.Enabled = true;
             if (MessageBox.Show("Are you sure you want to Renew the license?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
             {
@@ -144,6 +142,8 @@ namespace DVLD.Applications.Renew_Local_License
             else
                 MessageBox.Show("تم الحفظ ", "",MessageBoxButtons.OK, MessageBoxIcon.Information);
 
+            await _licenseService.DeactivateLicenseAsync(_LicenseID);
+
             btnRenewLicense.Enabled = false;
             ctrlDriverLicenseInfoWithFilter1.FilterEnabled = false;
             llShowLicenseInfo.Enabled = true;
@@ -163,11 +163,5 @@ namespace DVLD.Applications.Renew_Local_License
             this.Close();
         }
 
-        private async void frmRenewLocalDrivingLicenseApplication_Load(object sender, EventArgs e)
-        {
-
-
-    
-        }
     }
 }

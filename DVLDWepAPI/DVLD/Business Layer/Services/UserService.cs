@@ -10,15 +10,13 @@ namespace BusinessLayer.Services
         {
             return SqlHelper.ExecuteQueryAll<UserDto>("SPGetAllUsers");
         }
-        // في الميثود التي تستدعي الـ SqlHelper
         public UserDto GetUserById(int id)
         {
-            // هنا نعرف المتغير الذي سيستقبل الـ ID من البارامتر الخارج
             int returnedId;
 
             var person = SqlHelper.ExecuteeQuerySingl<UserDto>(
                 "SPGetUserById",
-                new { ID = id }, // تأكد أن الاسم يطابق @ID في الـ Proc
+                new { ID = id }, 
                 out returnedId
             );
 

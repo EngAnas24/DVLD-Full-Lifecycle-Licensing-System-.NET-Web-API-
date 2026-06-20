@@ -60,6 +60,13 @@ namespace DVLD.Applications.Local_Driving_License
             {
                 await ctrlApplicationBasicInfo2.LoadApplicationInfo(application.ApplicationID);
             }
+            var Localapp = await _LocalapplicationsService.GetLocalApplicationByIdAsync(_ApplicationID);
+            var license = await _licenseService.GetLicenseByApplicationIdAsync(Localapp.ApplicationID);
+            if(license == null)
+            {
+                llShowLicenceInfo.Enabled = false;
+                return;
+            }
         }
         private void _ResetLocalDrivingLicenseApplicationInfo()
         {

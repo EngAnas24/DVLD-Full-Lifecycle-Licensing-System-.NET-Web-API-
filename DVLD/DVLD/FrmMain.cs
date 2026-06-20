@@ -12,7 +12,9 @@ using DVLD.Applications.International_License;
 using DVLD.Applications.Local_Driving_License;
 using DVLD.Applications.Renew_Local_License;
 using DVLD.Applications.ReplaceLostOrDamagedLicense;
+using DVLD.Applications.Rlease_Detained_License;
 using DVLD.Drivers;
+using DVLD.Licenses.Detain_License;
 using DVLD.Login;
 using DVLD.Peoples;
 using DVLD.Tests;
@@ -35,18 +37,22 @@ namespace DVLD
             _userService = new UserService(_httpClient);
             _UserID = UserID;
         }
-
+        public FrmMain()
+        {
+            InitializeComponent();
+            _userService = new UserService(_httpClient);
+        }
         private void peopleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             frmListPeople frmPeople = new frmListPeople();
-            frmPeople.Show();
-            this.Hide();
+            frmPeople.ShowDialog();
+           
         }
 
         private void employeesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             frmListUsers frmUser = new frmListUsers();
-            frmUser.Show();
+            frmUser.ShowDialog();
         }
 
         private void msMainMenue_MouseHover(object sender, EventArgs e)
@@ -77,8 +83,7 @@ namespace DVLD
         private void signOutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FrmLogin frmLogin = new FrmLogin();
-            this.Hide();
-            frmLogin.Show();
+            frmLogin.ShowDialog();
         }
 
         private void manageApplicationTypesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -111,7 +116,7 @@ namespace DVLD
         private void manageLocalDrivingLicenseApplicationsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             frmListLocalDrivingLicesnseApplications frmListLocalDriving = new frmListLocalDrivingLicesnseApplications();
-            frmListLocalDriving.Show();
+            frmListLocalDriving.ShowDialog();
         }
 
         private void internationalLicenseToolStripMenuItem_Click(object sender, EventArgs e)
@@ -138,6 +143,32 @@ namespace DVLD
                 new frmReplaceLostOrDamagedLicenseApplication();
 
             frm.ShowDialog();
+        }
+
+        private void ManageDetainedLicensestoolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            frmListDetainedLicenses frmListDetainedLicenses = new frmListDetainedLicenses();
+            frmListDetainedLicenses.ShowDialog();
+
+        }
+
+        private void detainLicenseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmDetainLicenseApplication t = new frmDetainLicenseApplication();
+            t.ShowDialog();
+        }
+
+        private void releaseDetainedLicenseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmReleaseDetainedLicenseApplication frmReleaseDetained = new frmReleaseDetainedLicenseApplication();
+            frmReleaseDetained.ShowDialog();
+        }
+
+        private void retakeTestToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            frmListLocalDrivingLicesnseApplications frmListLocalDrivingLicesnseApplications
+                = new frmListLocalDrivingLicesnseApplications();
+            frmListLocalDrivingLicesnseApplications.ShowDialog();
         }
     }
 }

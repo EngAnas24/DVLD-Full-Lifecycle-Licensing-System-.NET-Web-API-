@@ -190,6 +190,370 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "DVLD.Controllers.AuthUserController",
+    "Method": "InsertUser",
+    "RelativePath": "api/AuthUser/AddUser",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "user",
+        "Type": "Entites.AurhModels.AuthUser",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 400
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 201
+      }
+    ]
+  },
+  {
+    "ContainingType": "DVLD.Controllers.AuthUserController",
+    "Method": "DeleteUser",
+    "RelativePath": "api/AuthUser/DeleteUser/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 400
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
+    "ContainingType": "DVLD.Controllers.AuthUserController",
+    "Method": "Login",
+    "RelativePath": "api/AuthUser/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Entites.AurhModels.Login",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "DVLD.Controllers.AuthUserController",
+    "Method": "Logout",
+    "RelativePath": "api/AuthUser/logout",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "DVLD.Controllers.AuthUserController",
+    "Method": "CheckAuth",
+    "RelativePath": "api/AuthUser/me",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "DVLD.Controllers.AuthUserController",
+    "Method": "RefreshToken",
+    "RelativePath": "api/AuthUser/refresh-token",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "DVLD.Controllers.AuthUserController",
+    "Method": "Register",
+    "RelativePath": "api/AuthUser/register",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Entites.AurhModels.Register",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "DVLD.Controllers.AuthUserController",
+    "Method": "UpdateUser",
+    "RelativePath": "api/AuthUser/UpdateUser/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "User",
+        "Type": "Entites.AurhModels.AuthUser",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 400
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
+    "ContainingType": "DVLD.Controllers.AuthUserController",
+    "Method": "GetUsers",
+    "RelativePath": "api/AuthUser/users",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "DVLD.Controllers.AuthUserController",
+    "Method": "GetUserbyId",
+    "RelativePath": "api/AuthUser/users/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "DVLD.Controllers.DetainedLicenseController",
+    "Method": "FindPersonByLicenseId",
+    "RelativePath": "api/DetainedLicense/{licenseId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "licenseId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "DVLD.Controllers.DetainedLicenseController",
+    "Method": "GetDetainedLicenseByLicenseID",
+    "RelativePath": "api/DetainedLicense/{LicenseID}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "LicenseID",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "GetDetainedLicenseByLicenseID"
+  },
+  {
+    "ContainingType": "DVLD.Controllers.DetainedLicenseController",
+    "Method": "InsertDetainedLicense",
+    "RelativePath": "api/DetainedLicense/AddDetainedLicense",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "DetainedLicense",
+        "Type": "Entites.DetainedLicense",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "DVLD.Controllers.DetainedLicenseController",
+    "Method": "GetAllDetainedLicenses",
+    "RelativePath": "api/DetainedLicense/all",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
+    "ContainingType": "DVLD.Controllers.DetainedLicenseController",
+    "Method": "GetDetainedLicenseByPersonID",
+    "RelativePath": "api/DetainedLicense/ByPersonID/{PersonID}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "PersonID",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "GetDetainedLicenseByPersonID"
+  },
+  {
+    "ContainingType": "DVLD.Controllers.DetainedLicenseController",
+    "Method": "DeleteDetainedLicense",
+    "RelativePath": "api/DetainedLicense/DeleteDetainedLicense/{DetainedLicenseID}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "DetainedLicenseID",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "DVLD.Controllers.DetainedLicenseController",
+    "Method": "IsLicenseDetained",
+    "RelativePath": "api/DetainedLicense/IsDetained/{LicenseID}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "LicenseID",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "DVLD.Controllers.DetainedLicenseController",
+    "Method": "ReleaseLicense",
+    "RelativePath": "api/DetainedLicense/Release",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "releaseParams",
+        "Type": "Entites.ReleaseTransactionParams",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "DVLD.Controllers.DetainedLicenseController",
+    "Method": "UpdateDetainedLicense",
+    "RelativePath": "api/DetainedLicense/UpdateDetainedLicense/{DetainedLicenseID}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "DetainedLicenseID",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "DetainedLicense",
+        "Type": "Entites.DetainedLicense",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "DVLD.Controllers.DriverController",
     "Method": "InsertDriver",
     "RelativePath": "api/Driver/AddDriver",
@@ -762,6 +1126,22 @@
   },
   {
     "ContainingType": "DVLD.Controllers.LocalDrivingLicenseApplicationController",
+    "Method": "CreateApplication",
+    "RelativePath": "api/LocalDrivingLicenseApplication/create",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "targetDto",
+        "Type": "Entites.CreateLocalDrivingLicenseAppDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "DVLD.Controllers.LocalDrivingLicenseApplicationController",
     "Method": "DeleteLocalApplication",
     "RelativePath": "api/LocalDrivingLicenseApplication/DeleteLocalApplication/{id}",
     "HttpMethod": "DELETE",
@@ -803,6 +1183,45 @@
   },
   {
     "ContainingType": "DVLD.Controllers.LocalDrivingLicenseApplicationController",
+    "Method": "GetPeronIdbyApplicationId",
+    "RelativePath": "api/LocalDrivingLicenseApplication/GetPeronIdbyApplicationId/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "GetPeronIdbyApplicationId"
+  },
+  {
+    "ContainingType": "DVLD.Controllers.LocalDrivingLicenseApplicationController",
+    "Method": "HasApplication",
+    "RelativePath": "api/LocalDrivingLicenseApplication/has/{personId}/{licenseClassId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "personId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "licenseClassId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "HasApplication"
+  },
+  {
+    "ContainingType": "DVLD.Controllers.LocalDrivingLicenseApplicationController",
     "Method": "InsertLocalApplication",
     "RelativePath": "api/LocalDrivingLicenseApplication/InsertLocalApplication",
     "HttpMethod": "POST",
@@ -833,6 +1252,27 @@
     ],
     "ReturnTypes": [],
     "EndpointName": "GetLocalApplicationByApplicationId"
+  },
+  {
+    "ContainingType": "DVLD.Controllers.LocalDrivingLicenseApplicationController",
+    "Method": "UpdateApplication",
+    "RelativePath": "api/LocalDrivingLicenseApplication/update/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "targetDto",
+        "Type": "Entites.UpdateLocalDrivingLicenseAppDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "DVLD.Controllers.LocalDrivingLicenseApplicationController",

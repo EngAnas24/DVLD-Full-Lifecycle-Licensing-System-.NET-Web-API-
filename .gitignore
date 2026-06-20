@@ -1,0 +1,6 @@
+## Ignore Visual Studio Temporary Files and Output
+[Ob]j/
+[Bb]in/
+*.user
+*.suo
+.vs/

@@ -17,11 +17,11 @@ namespace DVLD.Users
         private readonly UserService _UserService;
         private static readonly System.Net.Http.HttpClient _httpClient = new System.Net.Http.HttpClient
         {
-            BaseAddress = new Uri("http://localhost:5067/") // تأكد من وجود الـ / في النهاية
+            BaseAddress = new Uri("http://localhost:5067/")
         };
 
-        private DataTable _dtAllUser;
-        private int UserID;
+        private DataTable _dtAllUsers;
+        private int _selectedUserID = -1;
 
         public frmListUsers()
         {
@@ -29,225 +29,257 @@ namespace DVLD.Users
             _UserService = new UserService(_httpClient);
         }
 
-            private async void frmListUsers_Load(object sender, EventArgs e)
+        private async void frmListUsers_Load(object sender, EventArgs e)
+        {
+            await _RefreshUserList();
+
+            if (cbFilterBy.Items.Count > 0)
+                cbFilterBy.SelectedIndex = 0;
+        }
+
+        private async Task _RefreshUserList()
+        {
+            try
             {
-                await _RefreshUserList();
+                var allUsers = await _UserService.GetUserAsync();
 
-                // تأكد أن الكومبوبوكس يحتوي على العناصر قبل اختيار المندكس
-                if (cbFilterBy.Items.Count > 0)
-                    cbFilterBy.SelectedIndex = 0;
+                if (allUsers == null || !allUsers.Any())
+                {
+                    _dtAllUsers = new DataTable();
+                    dgvUsers.DataSource = null;
+                    lblRecordsCount.Text = "0";
+                    return;
+                }
 
-                if (cbFilterBy.Text == "None")
-                    txtFilterValue.Visible = false;
+                _dtAllUsers = DatatableExtention.ToDataTable(allUsers);
+                dgvUsers.DataSource = _dtAllUsers;
 
-                if (cbFilterBy.Text == "IsActive")
-                    cbIsActive.Visible = true;
+                if (dgvUsers.Columns.Contains("Password"))
+                {
+                    dgvUsers.Columns["Password"].Visible = false;
+                }
+
+                lblRecordsCount.Text = dgvUsers.Rows.Count.ToString();
             }
-
-            private async Task _RefreshUserList()
+            catch (Exception ex)
             {
-                try
-                {
-                    var allUser = await _UserService.GetUserAsync();
-                    if (!allUser.Any())
-                    {
-                        lblRecordsCount.Text = "0";
-                    }
-                    // تحويل القائمة إلى DataTable باستخدام الـ Extension الخاص بك
-                    _dtAllUser = DatatableExtention.ToDataTable(allUser);
-
-                dgvUsers.DataSource = _dtAllUser;
-                lblRecordsCount.Text = lblRecordsCount.Text + dgvUsers.Rows.Count.ToString();
-                }
-                catch (Exception ex)
-                {
-                lblRecordsCount.Text = lblRecordsCount.Text + " 0";
-                }
+                MessageBox.Show($"Error loading users: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                dgvUsers.DataSource = null;
+                lblRecordsCount.Text = "0";
             }
+        }
 
         private void btnClose_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        private void txtFilterValue_TextChanged(object sender, EventArgs e)
+        private void ApplyFilter()
         {
-            if (_dtAllUser == null) return;
+            if (_dtAllUsers == null) return;
 
+            string selectedFilter = cbFilterBy.Text.Trim();
+            string filterValue = txtFilterValue.Text.Trim();
             string filterColumn = "";
 
-            // يجب أن تطابق الحالات (cases) النصوص الموجودة في الكومبوبوكس تماماً
-            switch (cbFilterBy.Text)
+            switch (selectedFilter)
             {
-                case "UserID":
-                    filterColumn = "UserID";
+                case "User ID":
+                    filterColumn = "ID";
                     break;
-                    
-                case "PersonalID":
+
+                case "Person ID":
                     filterColumn = "PersonalID";
                     break;
-                    
-                case "FullName":
+
+                case "Full Name":
                     filterColumn = "FullName";
                     break;
-                case "IsActive":
-                    filterColumn = "Is Active";
+
+                case "UserName":
+                    filterColumn = "UserName";
                     break;
+
+                case "Is Active":
+                    filterColumn = "IsActive";
+                    break;
+
                 default:
                     filterColumn = "None";
                     break;
             }
 
-            // تنظيف المسافات
-            string filterValue = txtFilterValue.Text.Trim();
-
-            if (string.IsNullOrWhiteSpace(filterValue) || filterColumn == "None")
+            if (filterColumn == "None" || (filterColumn != "IsActive" && string.IsNullOrWhiteSpace(filterValue)))
             {
-                _dtAllUser.DefaultView.RowFilter = "";
-                lblRecordsCount.Text = _dtAllUser.Rows.Count.ToString();
+                _dtAllUsers.DefaultView.RowFilter = "";
+                lblRecordsCount.Text = _dtAllUsers.Rows.Count.ToString();
                 return;
             }
 
             try
             {
-                // التعامل مع UserID كعمود رقمي
-                if (filterColumn == "UserID")
+                if (filterColumn == "ID" || filterColumn == "PersonalID")
                 {
                     if (int.TryParse(filterValue, out int id))
                     {
-                        _dtAllUser.DefaultView.RowFilter = string.Format("[{0}] = {1}", filterColumn, id);
+                        _dtAllUsers.DefaultView.RowFilter = $"[{filterColumn}] = {id}";
                     }
                     else
                     {
-                        // إذا كتب المستخدم نصاً في حقل الرقم، نعرض قائمة فارغة
-                        _dtAllUser.DefaultView.RowFilter = "1=0";
+                        _dtAllUsers.DefaultView.RowFilter = "1=0"; 
+                    }
+                }
+                else if (filterColumn == "IsActive")
+                {
+                    if (cbIsActive != null)
+                    {
+                        string selectedStatus = cbIsActive.Text.Trim();
+
+                        if (selectedStatus == "All" || string.IsNullOrWhiteSpace(selectedStatus))
+                        {
+                            _dtAllUsers.DefaultView.RowFilter = "";
+                        }
+                        else
+                        {
+                            bool isActiveValue = (selectedStatus == "Yes");
+                            _dtAllUsers.DefaultView.RowFilter = $"[IsActive] = {isActiveValue}";
+                        }
                     }
                 }
                 else
                 {
-                    // بقية الأعمدة نصية
-                    _dtAllUser.DefaultView.RowFilter = string.Format("[{0}] LIKE '{1}%'", filterColumn, filterValue);
+                    string safeFilterValue = filterValue.Replace("'", "''");
+                    _dtAllUsers.DefaultView.RowFilter = $"[{filterColumn}] LIKE '{safeFilterValue}%'";
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                // لتجنب انهيار البرنامج في حال وجود رموز خاصة
-                _dtAllUser.DefaultView.RowFilter = "";
+                _dtAllUsers.DefaultView.RowFilter = "";
             }
 
-            lblRecordsCount.Text = _dtAllUser.DefaultView.Count.ToString();
+            lblRecordsCount.Text = _dtAllUsers.DefaultView.Count.ToString();
         }
+
+        private void txtFilterValue_TextChanged(object sender, EventArgs e)
+        {
+            ApplyFilter();
+        }
+
         private void cbFilterBy_SelectedIndexChanged(object sender, EventArgs e)
         {
-            txtFilterValue.Visible = (cbFilterBy.Text != "None");
+            string selectedFilter = cbFilterBy.Text.Trim();
+
+            txtFilterValue.Visible = (selectedFilter != "None" && selectedFilter != "Is Active");
+
+            if (cbIsActive != null)
+            {
+                cbIsActive.Visible = (selectedFilter == "Is Active");
+            }
 
             if (txtFilterValue.Visible)
             {
                 txtFilterValue.Text = "";
                 txtFilterValue.Focus();
             }
-            else
+
+            if (cbIsActive != null && cbIsActive.Visible)
             {
-                if (_dtAllUser != null)
+                cbIsActive.SelectedIndex = 0; 
+            }
+
+            ApplyFilter();
+        }
+
+        private void cbIsActive_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ApplyFilter();
+        }
+
+        private void UpdateSelectedUserID()
+        {
+            if (dgvUsers.CurrentRow != null && dgvUsers.CurrentRow.Index >= 0)
+            {
+                if (dgvUsers.CurrentRow.Cells["ID"].Value != DBNull.Value)
                 {
-                    _dtAllUser.DefaultView.RowFilter = "";
-                    lblRecordsCount.Text = _dtAllUser.Rows.Count.ToString();
+                    _selectedUserID = Convert.ToInt32(dgvUsers.CurrentRow.Cells["ID"].Value);
                 }
             }
+        }
+
+        private void dgvUsers_SelectionChanged(object sender, EventArgs e)
+        {
+            UpdateSelectedUserID();
         }
 
         private void dgvUsers_DoubleClick(object sender, EventArgs e)
         {
-            if (dgvUsers.CurrentRow == null) return;
+            UpdateSelectedUserID();
+            if (_selectedUserID == -1) return;
 
-            UserID = (int)dgvUsers.CurrentRow.Cells["ID"].Value;
-            frmShowUserInfo frmShowUser = new frmShowUserInfo(UserID);
+            frmShowUserInfo frmShowUser = new frmShowUserInfo(_selectedUserID);
             frmShowUser.ShowDialog();
         }
 
-        private void dgvUser_SelectionChanged(object sender, EventArgs e)
-        {
-
-            if (dgvUsers.CurrentRow != null && dgvUsers.CurrentRow.Index >= 0)
-            {
-                try
-                {
-                    UserID = Convert.ToInt32(dgvUsers.CurrentRow.Cells["UserID"].Value);
-                }
-
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error: {ex.Message}");
-                }
-            }
-        }
         private void showDetailsToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            if (dgvUsers.CurrentRow == null) return;
+            UpdateSelectedUserID();
+            if (_selectedUserID == -1) return;
 
-            UserID = (int)dgvUsers.CurrentRow.Cells["ID"].Value;
-            frmShowUserInfo frmShowUser = new frmShowUserInfo(UserID);
+            frmShowUserInfo frmShowUser = new frmShowUserInfo(_selectedUserID);
             frmShowUser.ShowDialog();
+        }
+
+        private async void editToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            UpdateSelectedUserID();
+            if (_selectedUserID == -1) return;
+
+            frmAddUpdateUser frmAddUpdate = new frmAddUpdateUser(_selectedUserID);
+            frmAddUpdate.ShowDialog();
+            await _RefreshUserList();
         }
 
         private async void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("This User will be deleted!! Are you sure you want to delete?",
-                                "Confirm Delete",
-                                MessageBoxButtons.OKCancel,
-                                MessageBoxIcon.Warning) == DialogResult.OK)
+            UpdateSelectedUserID();
+            if (_selectedUserID == -1) return;
+
+            if (MessageBox.Show("Are you sure you want to delete this user?", "Confirm Delete",
+                MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
             {
-                await _UserService.DeleteUserAsync(UserID);
-                MessageBox.Show("User Deleted Successfully.", "Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                await _RefreshUserList();
+                try
+                {
+                    await _UserService.DeleteUserAsync(_selectedUserID);
+                    MessageBox.Show("User Deleted Successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    await _RefreshUserList();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Deletion failed. Data might be linked. Details: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
-
-            else
-                MessageBox.Show("User was not deleted because it has data linked to it.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
         }
-
 
         private async void btnAddUser_Click(object sender, EventArgs e)
         {
             frmAddUpdateUser addUpdateUser = new frmAddUpdateUser();
             addUpdateUser.ShowDialog();
             await _RefreshUserList();
-
         }
-
 
         private async void addtoolStripMenuItem_Click(object sender, EventArgs e)
         {
             frmAddUpdateUser frmAddUpdate = new frmAddUpdateUser();
             frmAddUpdate.ShowDialog();
-           await _RefreshUserList();
-        }
-        private async void editToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            int UserID =(int) dgvUsers.CurrentRow.Cells["ID"].Value;
-            frmAddUpdateUser frmAddUpdate = new frmAddUpdateUser(UserID);
-            frmAddUpdate.ShowDialog();
             await _RefreshUserList();
-
-
         }
 
-
-        private async void deleteToolStripMenuItem_Click_1(object sender, EventArgs e)
+        private void ChangePasswordtoolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int UserID = (int)dgvUsers.CurrentRow.Cells[0].Value;
-            if (UserID != -1)
-            {
-              await  _UserService.DeleteUserAsync(UserID);
-                MessageBox.Show("User has been deleted successfully", "Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                await _RefreshUserList();
-            }
-
-            else
-                MessageBox.Show("User is not delted due to data connected to it.", "Faild", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
+            UpdateSelectedUserID();
+            if (_selectedUserID == -1) return;
+            frmChangePassword changePassword = new frmChangePassword(_selectedUserID);
+            changePassword.ShowDialog();
         }
     }
 }
-

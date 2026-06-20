@@ -1,6 +1,4 @@
-﻿using BusinessLayer;
-using BusinessLayer.Services;
-using DVDL.Domain.Entities;
+﻿using BusinessLayer.Services;
 using Entites;
 using Microsoft.AspNetCore.Mvc;
 

@@ -27,7 +27,7 @@ namespace DVLD.Tests.Controls
         private LocalDrivingLicesnseApplicationsService _LicesnseApplicationsService;
         private static readonly System.Net.Http.HttpClient _httpClient = new System.Net.Http.HttpClient
         {
-            BaseAddress = new Uri("http://localhost:5067/") // تأكد من وجود الـ / في النهاية
+            BaseAddress = new Uri("http://localhost:5067/")
         };
         public enTestType TestTypeID
         {
@@ -83,7 +83,7 @@ namespace DVLD.Tests.Controls
         }
 
 
-        public async Task LoadData(int TestAppointmentID) // تم تغييرها إلى Task
+        public async Task LoadData(int TestAppointmentID) 
         {
             _TestAppointmentID = TestAppointmentID;
 
@@ -109,7 +109,6 @@ namespace DVLD.Tests.Controls
                 lblTestID.Text = "Not Taken Yet";
             }
 
-            // جلب بيانات الطلب
             _LocalDrivingLicenseApplicationID = _TestAppointment.LocalDrivingLicenseApplicationID;
             _LocalDrivingLicenseApplication = await _LicesnseApplicationsService.GetLocalApplicationByIdAsync(_LocalDrivingLicenseApplicationID);
 

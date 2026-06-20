@@ -37,7 +37,7 @@
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnClose.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnClose.Location = new System.Drawing.Point(775, 400);
+            this.btnClose.Location = new System.Drawing.Point(760, 402);
             this.btnClose.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(126, 37);
@@ -51,7 +51,7 @@
             this.ctrlDrivingLicenseApplicationInfo1.ApplicationID = 0;
             this.ctrlDrivingLicenseApplicationInfo1.Location = new System.Drawing.Point(12, 12);
             this.ctrlDrivingLicenseApplicationInfo1.Name = "ctrlDrivingLicenseApplicationInfo1";
-            this.ctrlDrivingLicenseApplicationInfo1.Size = new System.Drawing.Size(934, 403);
+            this.ctrlDrivingLicenseApplicationInfo1.Size = new System.Drawing.Size(934, 382);
             this.ctrlDrivingLicenseApplicationInfo1.TabIndex = 19;
             // 
             // frmLocalDrivingLicenseApplicationInfo

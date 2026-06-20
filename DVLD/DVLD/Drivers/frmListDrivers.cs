@@ -1,4 +1,6 @@
-﻿using DVLD.Peoples;
+﻿using DVLD.Applications.International_License;
+using DVLD.Licenses;
+using DVLD.Peoples;
 using DVLDServices.Extentions;
 using DVLDServices.Services;
 using System;
@@ -11,6 +13,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static DVLDServices.Services.DriverService;
 
 namespace DVLD.Drivers
 {
@@ -30,14 +33,33 @@ namespace DVLD.Drivers
         }
 
 
-       private async void LoadData()
+        private async void LoadData()
         {
-            var Drivers = await _driverService.GetDriversAsync();
-            _dtDrivers = DatatableExtention.ToDataTable(Drivers);
-            dgvDrivers.DataSource = _dtDrivers;
-            cbFilterBy.SelectedIndex = 0;
-        }
+            try
+            {
+                var drivers = await _driverService.GetDriversAsync();
 
+                _dtDrivers = drivers.ToDataTable();
+                dgvDrivers.DataSource = _dtDrivers;
+            }
+            catch (Exception ex) when (ex.Message.Contains("NotFound") || ex.Message.Contains("No Driver found"))
+            {
+                List<DriverDto> emptyList = new List<DriverDto>(); 
+                _dtDrivers = emptyList.ToDataTable();
+                dgvDrivers.DataSource = _dtDrivers;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"حدث خطأ غير متوقع أثناء تحميل البيانات: {ex.Message}", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (cbFilterBy.Items.Count > 0)
+                {
+                    cbFilterBy.SelectedIndex = 0;
+                }
+            }
+        }
         private void frmListDrivers_Load(object sender, EventArgs e)
         {
             LoadData();
@@ -68,7 +90,6 @@ namespace DVLD.Drivers
 
             string filterValue = txtFilterValue.Text.Trim();
 
-            // حالة المسح أو عدم اختيار عمود
             if (string.IsNullOrWhiteSpace(filterValue) || filterColumn == "None")
             {
                 _dtDrivers.DefaultView.RowFilter = "";
@@ -122,6 +143,20 @@ namespace DVLD.Drivers
             frmListDrivers_Load(null, null);
             frmShowPerson.ShowDialog();
 
+        }
+
+        private void showPersonLicenseHistoryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int PersonID = (int)dgvDrivers.CurrentRow.Cells["PersonID"].Value;
+            frmShowPersonLicenseHistory personLicenseHistory = new frmShowPersonLicenseHistory(PersonID);
+            personLicenseHistory.ShowDialog();
+        }
+
+        private void issueInternationalLicenseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmNewInternationalLicenseApplication frmNewInternationalLicense =
+                new frmNewInternationalLicenseApplication();
+            frmNewInternationalLicense.ShowDialog();
         }
     }
 }

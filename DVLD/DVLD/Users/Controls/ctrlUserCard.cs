@@ -23,7 +23,7 @@ namespace DVLD.Users.Controls
 
         private static readonly System.Net.Http.HttpClient _httpClient = new System.Net.Http.HttpClient
         {
-            BaseAddress = new Uri("http://localhost:5067/") // تأكد من وجود الـ / في النهاية
+            BaseAddress = new Uri("http://localhost:5067/") 
         };
         private int _UserID = -1;
 

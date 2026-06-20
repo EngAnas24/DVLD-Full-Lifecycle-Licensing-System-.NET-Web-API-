@@ -18,18 +18,12 @@ namespace DVLD.Application_Types
         private DataTable dataTable;
         private static readonly System.Net.Http.HttpClient _httpClient = new System.Net.Http.HttpClient
         {
-            BaseAddress = new Uri("http://localhost:5067/") // تأكد من وجود الـ / في النهاية
+            BaseAddress = new Uri("http://localhost:5067/") 
         };
         public frmListApplicationTypes()
         {
             InitializeComponent();
             _applicationTypeService = new ApplicationTypeService(_httpClient);
-        }
-
-
-       public async void LoadData()
-        {
-
         }
 
 
@@ -41,7 +35,9 @@ namespace DVLD.Application_Types
         private async void frmListApplicationTypes_Load(object sender, EventArgs e)
         {
             var applicationTypes = await _applicationTypeService.GetApplicationTypesAsync();
-            dgvApplicationTypes.DataSource = DatatableExtention.ToDataTable(applicationTypes);
+            dataTable = DatatableExtention.ToDataTable(applicationTypes);
+            dgvApplicationTypes.DataSource = dataTable;
+            lblRecordsCount.Text = dataTable.Rows.Count.ToString();
         }
 
         private void editToolStripMenuItem_Click(object sender, EventArgs e)
@@ -49,6 +45,7 @@ namespace DVLD.Application_Types
             int ID = (int)dgvApplicationTypes.CurrentRow.Cells["ApplicationTypeID"].Value;
             frmEditApplicationType frmEditApplicationType = new frmEditApplicationType(ID);
             frmEditApplicationType.ShowDialog();
+            frmListApplicationTypes_Load(null, null);
         }
     }
 }

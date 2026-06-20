@@ -19,7 +19,6 @@ namespace DVLD.Users
             InitializeComponent();
             _UserID = UserID;
 
-            // استدعاء الدالة مباشرة بعد تهيئة المكونات
             ctrlUserCard1.LoadUserInfo(_UserID);
         }
 

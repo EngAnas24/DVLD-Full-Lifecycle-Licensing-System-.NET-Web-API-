@@ -35,6 +35,8 @@ namespace DVLD.Tests
             var TestTypes = await _testTypeService.GetTestTypesAsync();
             dataTable = DatatableExtention.ToDataTable(TestTypes);
             dgvTestTypes.DataSource = dataTable;
+            lblRecordsCount.Text = dataTable.Rows.Count.ToString();
+
         }
 
         private void btnClose_Click(object sender, EventArgs e)

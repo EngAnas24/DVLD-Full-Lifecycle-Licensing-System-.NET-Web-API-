@@ -41,6 +41,7 @@
             this.gpDetain = new System.Windows.Forms.GroupBox();
             this.pictureBox8 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.btnDetain = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.lblDetainDate = new System.Windows.Forms.Label();
@@ -50,7 +51,6 @@
             this.label4 = new System.Windows.Forms.Label();
             this.llShowLicenseInfo = new System.Windows.Forms.LinkLabel();
             this.btnClose = new System.Windows.Forms.Button();
-            this.btnDetain = new System.Windows.Forms.Button();
             this.ctrlDriverLicenseInfoWithFilter1 = new DVLD.Licenses.Local_Licenses.Controls.ctrlDriverLicenseInfoWithFilter();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.gpDetain.SuspendLayout();
@@ -97,6 +97,7 @@
             this.lblTitle.TabIndex = 185;
             this.lblTitle.Text = "Detain License";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblTitle.Click += new System.EventHandler(this.lblTitle_Click);
             // 
             // txtFineFees
             // 
@@ -148,6 +149,7 @@
             this.llShowLicenseHistory.TabIndex = 189;
             this.llShowLicenseHistory.TabStop = true;
             this.llShowLicenseHistory.Text = "Show Licenses History";
+            this.llShowLicenseHistory.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llShowLicenseHistory_LinkClicked);
             // 
             // gpDetain
             // 
@@ -156,6 +158,7 @@
             this.gpDetain.Controls.Add(this.lblLicenseID);
             this.gpDetain.Controls.Add(this.label10);
             this.gpDetain.Controls.Add(this.pictureBox2);
+            this.gpDetain.Controls.Add(this.btnDetain);
             this.gpDetain.Controls.Add(this.pictureBox1);
             this.gpDetain.Controls.Add(this.label1);
             this.gpDetain.Controls.Add(this.lblCreatedByUser);
@@ -172,6 +175,7 @@
             this.gpDetain.TabIndex = 186;
             this.gpDetain.TabStop = false;
             this.gpDetain.Text = "Detain Info";
+            this.gpDetain.Enter += new System.EventHandler(this.gpDetain_Enter);
             // 
             // pictureBox8
             // 
@@ -190,6 +194,20 @@
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox2.TabIndex = 183;
             this.pictureBox2.TabStop = false;
+            // 
+            // btnDetain
+            // 
+            this.btnDetain.Enabled = false;
+            this.btnDetain.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDetain.Image = global::DVLD.Properties.Resources.International_32;
+            this.btnDetain.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnDetain.Location = new System.Drawing.Point(724, 55);
+            this.btnDetain.Name = "btnDetain";
+            this.btnDetain.Size = new System.Drawing.Size(126, 37);
+            this.btnDetain.TabIndex = 188;
+            this.btnDetain.Text = "Detain";
+            this.btnDetain.UseVisualStyleBackColor = true;
+            this.btnDetain.Click += new System.EventHandler(this.btnDetain_Click);
             // 
             // pictureBox1
             // 
@@ -273,6 +291,7 @@
             this.llShowLicenseInfo.TabIndex = 190;
             this.llShowLicenseInfo.TabStop = true;
             this.llShowLicenseInfo.Text = "Show Licenses Info";
+            this.llShowLicenseInfo.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llShowLicenseInfo_LinkClicked);
             // 
             // btnClose
             // 
@@ -287,19 +306,6 @@
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = true;
             // 
-            // btnDetain
-            // 
-            this.btnDetain.Enabled = false;
-            this.btnDetain.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDetain.Image = global::DVLD.Properties.Resources.International_32;
-            this.btnDetain.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnDetain.Location = new System.Drawing.Point(739, 641);
-            this.btnDetain.Name = "btnDetain";
-            this.btnDetain.Size = new System.Drawing.Size(126, 37);
-            this.btnDetain.TabIndex = 188;
-            this.btnDetain.Text = "Detain";
-            this.btnDetain.UseVisualStyleBackColor = true;
-            // 
             // ctrlDriverLicenseInfoWithFilter1
             // 
             this.ctrlDriverLicenseInfoWithFilter1.FilterEnabled = true;
@@ -307,6 +313,8 @@
             this.ctrlDriverLicenseInfoWithFilter1.Name = "ctrlDriverLicenseInfoWithFilter1";
             this.ctrlDriverLicenseInfoWithFilter1.Size = new System.Drawing.Size(877, 423);
             this.ctrlDriverLicenseInfoWithFilter1.TabIndex = 191;
+            this.ctrlDriverLicenseInfoWithFilter1.OnLicenseSelected += new System.Action<int>(this.ctrlDriverLicenseInfoWithFilter1_OnLicenseSelected);
+            this.ctrlDriverLicenseInfoWithFilter1.Load += new System.EventHandler(this.ctrlDriverLicenseInfoWithFilter1_Load);
             // 
             // frmDetainLicenseApplication
             // 
@@ -318,7 +326,6 @@
             this.Controls.Add(this.llShowLicenseHistory);
             this.Controls.Add(this.gpDetain);
             this.Controls.Add(this.llShowLicenseInfo);
-            this.Controls.Add(this.btnDetain);
             this.Controls.Add(this.btnClose);
             this.Name = "frmDetainLicenseApplication";
             this.Text = "frmDetainLicenseApplication";

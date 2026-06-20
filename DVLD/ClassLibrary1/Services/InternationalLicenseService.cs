@@ -37,9 +37,16 @@ namespace DVLDServices.Services
             try
             {
                 var response = await _httpClient.GetAsync("api/InternationalLicense/all");
+
                 if (response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadFromJsonAsync<List<InternationalLicenseDto>>(_jsonOptions) ?? new List<InternationalLicenseDto>();
+                    return await response.Content.ReadFromJsonAsync<List<InternationalLicenseDto>>(_jsonOptions)
+                           ?? new List<InternationalLicenseDto>();
+                }
+
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return new List<InternationalLicenseDto>();
                 }
 
                 var error = await response.Content.ReadAsStringAsync();
@@ -50,7 +57,6 @@ namespace DVLDServices.Services
                 throw new Exception("تعذر الاتصال بالسيرفر. تأكد من تشغيل الـ API.");
             }
         }
-
         public async Task<InternationalLicenseDto> GetInternationalLicenseByIdAsync(int id)
         {
             try

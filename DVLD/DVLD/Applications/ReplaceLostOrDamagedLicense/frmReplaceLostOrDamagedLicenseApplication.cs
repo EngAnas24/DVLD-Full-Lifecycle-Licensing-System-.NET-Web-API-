@@ -87,6 +87,9 @@ namespace DVLD.Applications.ReplaceLostOrDamagedLicense
                 {
                     return;
                 }
+
+            btnIssueReplacement.Enabled = true;
+
             var Lic = await _licenseService.GetLicenseByIdAsync(_LicenseID);
             var app = await _applicationService.GetApplicationByIdAsync(Lic.ApplicationID);
 

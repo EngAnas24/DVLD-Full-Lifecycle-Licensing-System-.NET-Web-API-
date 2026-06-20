@@ -188,19 +188,24 @@ namespace DVLDServices.Services
             }
             return 0;
         }
-
-        public async Task<int> DoesAttendTestType(int localAppID, int testTypeID)
+        public async Task<bool> DoesAttendTestType(int LocalicenseID, int testTypeID)
         {
-            var response = await _httpClient.GetAsync($"api/TestAppointment/DoesAttendTestType/{localAppID}/{testTypeID}");
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var result = await response.Content.ReadFromJsonAsync<TestResultResult>(_jsonOptions);
-                return result != null ? result.returnNum : 0;
-            }
-            return 0;
-        }
+                var response = await _httpClient.GetAsync($"api/TestAppointment/DoesAttendTestType/{LocalicenseID}/{testTypeID}");
 
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
 
         public enum enTestType
         {
@@ -217,12 +222,10 @@ namespace DVLDServices.Services
         public class TestAppointmentDto
         {
             public int TestAppointmentID { get; set; }
-            public int TestTypeID { get; set; }
             public float PaidFees { get; set; }
             public int LocalDrivingLicenseApplicationID { get; set; }
             public DateTime AppointmentDate { get; set; }
-            public int CreatedByUserID { get; set; }
-            public byte IsLocked { get; set; }
+            public bool IsLocked { get; set; }
             public int RetakeTestApplicationID { get; set; }
         }
 
@@ -235,7 +238,7 @@ namespace DVLDServices.Services
             public int LocalDrivingLicenseApplicationID { get; set; }
             public DateTime AppointmentDate { get; set; }
             public int CreatedByUserID { get; set; }
-            public byte IsLocked { get; set; }
+            public bool IsLocked { get; set; }
             public int RetakeTestApplicationID { get; set; }
         }
     
