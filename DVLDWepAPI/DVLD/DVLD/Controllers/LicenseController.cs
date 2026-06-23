@@ -39,13 +39,13 @@ namespace DVLD.Controllers
             return License == null ? NotFound("الرخصة غير موجودة.") : Ok(License);
         }
 
-        [HttpGet("LicensesBy/{PersonID}", Name = "GetLicensesByPersonId")]
-        public IActionResult GetLicensesByPersonId(int PersonID)
+        [HttpGet("LicensesBy/{DriverID}", Name = "GetLicensesByDriverID")]
+        public IActionResult GetLicensesByDriverID(int DriverID)
         {
-            if (PersonID <= 0)
+            if (DriverID <= 0)
                 return BadRequest("معرف الرخصة غير صالح.");
 
-            var Licenses = LicenseService.GetLicensesByPersonId(PersonID);
+            var Licenses = LicenseService.GetLicensesByDriverID(DriverID);
             return Licenses == null ? NotFound("الرخصة غير موجودة.") : Ok(Licenses);
         }
 

@@ -3,12 +3,48 @@
   "WorkspaceRootPath": "D:\\c#\\ProgramlamaAdvicesProjects\\DVLDWepAPI\\DVLD\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{6B2B2499-4033-499C-85BD-A098E87B5967}|DVLD\\DVLD.csproj|d:\\c#\\programlamaadvicesprojects\\dvldwepapi\\dvld\\dvld\\controllers\\detainedlicensecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6B2B2499-4033-499C-85BD-A098E87B5967}|DVLD\\DVLD.csproj|solutionrelative:dvld\\controllers\\detainedlicensecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6B2B2499-4033-499C-85BD-A098E87B5967}|DVLD\\DVLD.csproj|d:\\c#\\programlamaadvicesprojects\\dvldwepapi\\dvld\\dvld\\controllers\\licensecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6B2B2499-4033-499C-85BD-A098E87B5967}|DVLD\\DVLD.csproj|solutionrelative:dvld\\controllers\\licensecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6B2B2499-4033-499C-85BD-A098E87B5967}|DVLD\\DVLD.csproj|d:\\c#\\programlamaadvicesprojects\\dvldwepapi\\dvld\\dvld\\controllers\\drivercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6B2B2499-4033-499C-85BD-A098E87B5967}|DVLD\\DVLD.csproj|solutionrelative:dvld\\controllers\\drivercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C8A858E-C4A1-4306-BE67-306E9432D870}|Business Layer\\BusinessLayer.csproj|d:\\c#\\programlamaadvicesprojects\\dvldwepapi\\dvld\\business layer\\services\\driverservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C8A858E-C4A1-4306-BE67-306E9432D870}|Business Layer\\BusinessLayer.csproj|solutionrelative:business layer\\services\\driverservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E12B8879-66D4-46F0-BEE2-E055E933C9DB}|Entites\\Entites.csproj|d:\\c#\\programlamaadvicesprojects\\dvldwepapi\\dvld\\entites\\driver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E12B8879-66D4-46F0-BEE2-E055E933C9DB}|Entites\\Entites.csproj|solutionrelative:entites\\driver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{6B2B2499-4033-499C-85BD-A098E87B5967}|DVLD\\DVLD.csproj|d:\\c#\\programlamaadvicesprojects\\dvldwepapi\\dvld\\dvld\\controllers\\localdrivinglicenseapplicationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6B2B2499-4033-499C-85BD-A098E87B5967}|DVLD\\DVLD.csproj|solutionrelative:dvld\\controllers\\localdrivinglicenseapplicationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1C8A858E-C4A1-4306-BE67-306E9432D870}|Business Layer\\BusinessLayer.csproj|d:\\c#\\programlamaadvicesprojects\\dvldwepapi\\dvld\\business layer\\services\\localdrivinglicenseapplicationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1C8A858E-C4A1-4306-BE67-306E9432D870}|Business Layer\\BusinessLayer.csproj|solutionrelative:business layer\\services\\localdrivinglicenseapplicationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6B2B2499-4033-499C-85BD-A098E87B5967}|DVLD\\DVLD.csproj|d:\\c#\\programlamaadvicesprojects\\dvldwepapi\\dvld\\dvld\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6B2B2499-4033-499C-85BD-A098E87B5967}|DVLD\\DVLD.csproj|solutionrelative:dvld\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2D723D51-280C-4F60-A253-B41B2EF30441}|DataAccessLayer\\DataAccessLayer.csproj|d:\\c#\\programlamaadvicesprojects\\dvldwepapi\\dvld\\dataaccesslayer\\dtos\\licensedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2D723D51-280C-4F60-A253-B41B2EF30441}|DataAccessLayer\\DataAccessLayer.csproj|solutionrelative:dataaccesslayer\\dtos\\licensedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C8A858E-C4A1-4306-BE67-306E9432D870}|Business Layer\\BusinessLayer.csproj|d:\\c#\\programlamaadvicesprojects\\dvldwepapi\\dvld\\business layer\\services\\licenseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C8A858E-C4A1-4306-BE67-306E9432D870}|Business Layer\\BusinessLayer.csproj|solutionrelative:business layer\\services\\licenseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C8A858E-C4A1-4306-BE67-306E9432D870}|Business Layer\\BusinessLayer.csproj|d:\\c#\\programlamaadvicesprojects\\dvldwepapi\\dvld\\business layer\\services\\detainedlicenseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C8A858E-C4A1-4306-BE67-306E9432D870}|Business Layer\\BusinessLayer.csproj|solutionrelative:business layer\\services\\detainedlicenseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1C8A858E-C4A1-4306-BE67-306E9432D870}|Business Layer\\BusinessLayer.csproj|d:\\c#\\programlamaadvicesprojects\\dvldwepapi\\dvld\\business layer\\services\\applicationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -35,32 +71,144 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "DetainedLicenseController.cs",
+              "DocumentMoniker": "D:\\c#\\ProgramlamaAdvicesProjects\\DVLDWepAPI\\DVLD\\DVLD\\Controllers\\DetainedLicenseController.cs",
+              "RelativeDocumentMoniker": "DVLD\\Controllers\\DetainedLicenseController.cs",
+              "ToolTip": "D:\\c#\\ProgramlamaAdvicesProjects\\DVLDWepAPI\\DVLD\\DVLD\\Controllers\\DetainedLicenseController.cs",
+              "RelativeToolTip": "DVLD\\Controllers\\DetainedLicenseController.cs",
+              "ViewState": "AgIAAC8AAAAAAAAAAAAiwEIAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-23T00:17:14.982Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "DriverService.cs",
+              "DocumentMoniker": "D:\\c#\\ProgramlamaAdvicesProjects\\DVLDWepAPI\\DVLD\\Business Layer\\Services\\DriverService.cs",
+              "RelativeDocumentMoniker": "Business Layer\\Services\\DriverService.cs",
+              "ToolTip": "D:\\c#\\ProgramlamaAdvicesProjects\\DVLDWepAPI\\DVLD\\Business Layer\\Services\\DriverService.cs",
+              "RelativeToolTip": "Business Layer\\Services\\DriverService.cs",
+              "ViewState": "AgIAABwAAAAAAAAAAAAowCoAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-22T23:40:40.888Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Driver.cs",
+              "DocumentMoniker": "D:\\c#\\ProgramlamaAdvicesProjects\\DVLDWepAPI\\DVLD\\Entites\\Driver.cs",
+              "RelativeDocumentMoniker": "Entites\\Driver.cs",
+              "ToolTip": "D:\\c#\\ProgramlamaAdvicesProjects\\DVLDWepAPI\\DVLD\\Entites\\Driver.cs",
+              "RelativeToolTip": "Entites\\Driver.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-22T20:22:43.26Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "LicenseController.cs",
+              "DocumentMoniker": "D:\\c#\\ProgramlamaAdvicesProjects\\DVLDWepAPI\\DVLD\\DVLD\\Controllers\\LicenseController.cs",
+              "RelativeDocumentMoniker": "DVLD\\Controllers\\LicenseController.cs",
+              "ToolTip": "D:\\c#\\ProgramlamaAdvicesProjects\\DVLDWepAPI\\DVLD\\DVLD\\Controllers\\LicenseController.cs",
+              "RelativeToolTip": "DVLD\\Controllers\\LicenseController.cs",
+              "ViewState": "AgIAABwAAAAAAAAAAAAMwCUAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-20T23:33:04.336Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\c#\\ProgramlamaAdvicesProjects\\DVLDWepAPI\\DVLD\\DVLD\\Program.cs",
+              "RelativeDocumentMoniker": "DVLD\\Program.cs",
+              "ToolTip": "D:\\c#\\ProgramlamaAdvicesProjects\\DVLDWepAPI\\DVLD\\DVLD\\Program.cs",
+              "RelativeToolTip": "DVLD\\Program.cs",
+              "ViewState": "AgIAACEAAAAAAAAAAAAAAEoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-20T23:03:12.704Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "DriverController.cs",
+              "DocumentMoniker": "D:\\c#\\ProgramlamaAdvicesProjects\\DVLDWepAPI\\DVLD\\DVLD\\Controllers\\DriverController.cs",
+              "RelativeDocumentMoniker": "DVLD\\Controllers\\DriverController.cs",
+              "ToolTip": "D:\\c#\\ProgramlamaAdvicesProjects\\DVLDWepAPI\\DVLD\\DVLD\\Controllers\\DriverController.cs",
+              "RelativeToolTip": "DVLD\\Controllers\\DriverController.cs",
+              "ViewState": "AgIAACwAAAAAAAAAAAAwwDYAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-20T23:00:02.904Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "LocalDrivingLicenseApplicationController.cs",
               "DocumentMoniker": "D:\\c#\\ProgramlamaAdvicesProjects\\DVLDWepAPI\\DVLD\\DVLD\\Controllers\\LocalDrivingLicenseApplicationController.cs",
               "RelativeDocumentMoniker": "DVLD\\Controllers\\LocalDrivingLicenseApplicationController.cs",
               "ToolTip": "D:\\c#\\ProgramlamaAdvicesProjects\\DVLDWepAPI\\DVLD\\DVLD\\Controllers\\LocalDrivingLicenseApplicationController.cs",
               "RelativeToolTip": "DVLD\\Controllers\\LocalDrivingLicenseApplicationController.cs",
-              "ViewState": "AgIAAKMAAAAAAAAAAAApwKsAAAATAAAAAAAAAA==",
+              "ViewState": "AgIAAJ0AAAAAAAAAAAASwLsAAABWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-06-19T23:27:44.811Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 6,
               "Title": "LocalDrivingLicenseApplicationService.cs",
               "DocumentMoniker": "D:\\c#\\ProgramlamaAdvicesProjects\\DVLDWepAPI\\DVLD\\Business Layer\\Services\\LocalDrivingLicenseApplicationService.cs",
               "RelativeDocumentMoniker": "Business Layer\\Services\\LocalDrivingLicenseApplicationService.cs",
               "ToolTip": "D:\\c#\\ProgramlamaAdvicesProjects\\DVLDWepAPI\\DVLD\\Business Layer\\Services\\LocalDrivingLicenseApplicationService.cs",
               "RelativeToolTip": "Business Layer\\Services\\LocalDrivingLicenseApplicationService.cs",
-              "ViewState": "AgIAACsAAAAAAAAAAAAxwDgAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAADcAAAAAAAAAAAAnwD8AAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-19T23:23:00.906Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-19T23:23:00.906Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 9,
+              "Title": "LicenseService.cs",
+              "DocumentMoniker": "D:\\c#\\ProgramlamaAdvicesProjects\\DVLDWepAPI\\DVLD\\Business Layer\\Services\\LicenseService.cs",
+              "RelativeDocumentMoniker": "Business Layer\\Services\\LicenseService.cs",
+              "ToolTip": "D:\\c#\\ProgramlamaAdvicesProjects\\DVLDWepAPI\\DVLD\\Business Layer\\Services\\LicenseService.cs",
+              "RelativeToolTip": "Business Layer\\Services\\LicenseService.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAqwBAAAABWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-21T13:49:23.008Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "DetainedLicenseService.cs",
+              "DocumentMoniker": "D:\\c#\\ProgramlamaAdvicesProjects\\DVLDWepAPI\\DVLD\\Business Layer\\Services\\DetainedLicenseService.cs",
+              "RelativeDocumentMoniker": "Business Layer\\Services\\DetainedLicenseService.cs",
+              "ToolTip": "D:\\c#\\ProgramlamaAdvicesProjects\\DVLDWepAPI\\DVLD\\Business Layer\\Services\\DetainedLicenseService.cs",
+              "RelativeToolTip": "Business Layer\\Services\\DetainedLicenseService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-21T13:51:02.794Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "LicenseDto.cs",
+              "DocumentMoniker": "D:\\c#\\ProgramlamaAdvicesProjects\\DVLDWepAPI\\DVLD\\DataAccessLayer\\Dtos\\LicenseDto.cs",
+              "RelativeDocumentMoniker": "DataAccessLayer\\Dtos\\LicenseDto.cs",
+              "ToolTip": "D:\\c#\\ProgramlamaAdvicesProjects\\DVLDWepAPI\\DVLD\\DataAccessLayer\\Dtos\\LicenseDto.cs",
+              "RelativeToolTip": "DataAccessLayer\\Dtos\\LicenseDto.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAAwBQAAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-21T13:51:21.948Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
               "Title": "ApplicationService.cs",
               "DocumentMoniker": "D:\\c#\\ProgramlamaAdvicesProjects\\DVLDWepAPI\\DVLD\\Business Layer\\Services\\ApplicationService.cs",
               "RelativeDocumentMoniker": "Business Layer\\Services\\ApplicationService.cs",
@@ -68,12 +216,11 @@
               "RelativeToolTip": "Business Layer\\Services\\ApplicationService.cs",
               "ViewState": "AgIAABUAAAAAAAAAAAAowAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-19T23:22:46.31Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-19T23:22:46.31Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 12,
               "Title": "UserService.cs",
               "DocumentMoniker": "D:\\c#\\ProgramlamaAdvicesProjects\\DVLDWepAPI\\DVLD\\Business Layer\\Services\\UserService.cs",
               "RelativeDocumentMoniker": "Business Layer\\Services\\UserService.cs",
@@ -81,8 +228,7 @@
               "RelativeToolTip": "Business Layer\\Services\\UserService.cs",
               "ViewState": "AgIAAC0AAAAAAAAAAAAmwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-19T23:22:36.228Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-19T23:22:36.228Z"
             }
           ]
         }

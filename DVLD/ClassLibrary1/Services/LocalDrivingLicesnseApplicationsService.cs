@@ -110,6 +110,28 @@ namespace DVLDServices.Services
                 throw new Exception("تعذر الاتصال بالسيرفر. تأكد من تشغيل الـ API.");
             }
         }
+        public async Task<int> HasAlreadyLicense(int personId, int licenseClassId)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"api/LocalDrivingLicenseApplication/HasAlreadyLicense/{personId}/{licenseClassId}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<int>(_jsonOptions);
+                }
+
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                    return 0;
+
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"خطأ {response.StatusCode}: {error}");
+            }
+            catch (HttpRequestException)
+            {
+                throw new Exception("تعذر الاتصال بالسيرفر. تأكد من تشغيل الـ API.");
+            }
+        }
         public async Task<LocalDrivingLicenseApplications> InsertLocalApplication(LocalDrivingLicenseApplications LocalApp)
         {
             try

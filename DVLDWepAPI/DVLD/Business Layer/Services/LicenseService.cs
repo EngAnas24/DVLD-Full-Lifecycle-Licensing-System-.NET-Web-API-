@@ -23,12 +23,12 @@ namespace BusinessLayer.Services
             return License;
         }
 
-        public List<LicenseDto> GetLicensesByPersonId(int id)
+        public List<LicenseDto> GetLicensesByDriverID(int id)
         {
 
             var License = SqlHelper.ExecuteQueryAll<DataAccessLayer.Dtos.LicenseDto>(
-                "SPGetLicensesByPersonId",
-                new { ID = 0 , PersonID = id }
+                "SPGetLicensesByDriverID",
+                new { ID = 0 , DriverID = id }
      
             );
 

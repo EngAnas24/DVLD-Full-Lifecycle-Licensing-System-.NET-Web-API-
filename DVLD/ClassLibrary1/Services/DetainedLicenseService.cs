@@ -154,7 +154,6 @@ namespace ClassLibrary1.Services
         {
             try
             {
-                // تم التغيير هنا من DeleteAsync إلى GetAsync لتتوافق مع الـ Backend
                 var response = await _httpClient.GetAsync($"api/DetainedLicense/IsDetained/{LicenseID}");
 
                 if (response.IsSuccessStatusCode)

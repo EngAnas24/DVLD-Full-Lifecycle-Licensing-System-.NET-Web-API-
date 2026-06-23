@@ -38,10 +38,8 @@ builder.Services.AddScoped<JwtToken>();
 
 builder.Services.AddHttpContextAccessor();
 
-// 3. تهيئة قاعدة البيانات
 SqlHelper.Init(builder.Configuration.GetConnectionString("DefaultConnection"));
 
-// 4. إعدادات الـ Rate Limiter
 builder.Services.AddRateLimiter(options =>
 {
     options.AddFixedWindowLimiter(policyName: "AuthPolicy", fixedOptions =>
@@ -64,7 +62,6 @@ builder.Services.AddRateLimiter(options =>
     };
 });
 
-// 5. إعدادات الـ CORS
 builder.Services.AddCors(o =>
 {
     o.AddPolicy("AngularPolicy", policy =>
@@ -76,7 +73,7 @@ builder.Services.AddCors(o =>
     });
 });
 
-// 6. إعدادات الـ Authentication والـ JWT عبر الكوكيز
+
 var secretKey = builder.Configuration["JwtSettings:Secret"] ?? "اكتب_هنا_مفتاح_سري_قوي_جدا_وطويل";
 
 builder.Services.AddAuthentication(options =>
@@ -115,7 +112,6 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// 7. ترتيب الـ Middleware Pipeline (حرج جداً لعمل الـ API)
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

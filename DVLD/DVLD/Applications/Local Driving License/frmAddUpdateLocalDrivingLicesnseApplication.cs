@@ -204,6 +204,13 @@ namespace DVLD.Applications.Local_Driving_License
                     return;
                 }
 
+                int FoundLicense = await _LocalapplicationService.HasAlreadyLicense(ctrlPersonCardWithFilter1.PersonID, (int)cbLicenseClass.SelectedValue);
+                if (FoundLicense == 1)
+                {
+                    MessageBox.Show("Choose another License Class, the selected Person Already have a License for the selected class with id=" + ActiveApplicationID, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    cbLicenseClass.Focus();
+                    return;
+                }
                 if (Application != null)
                 {
                   var app =  await applicationService.AddApplicationAsync(Application);

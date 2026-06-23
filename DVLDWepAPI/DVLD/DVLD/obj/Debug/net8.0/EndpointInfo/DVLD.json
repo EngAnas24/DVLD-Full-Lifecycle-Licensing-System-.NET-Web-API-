@@ -1347,15 +1347,15 @@
         }
       }
     },
-    "/api/License/LicensesBy/{PersonID}": {
+    "/api/License/LicensesBy/{DriverID}": {
       "get": {
         "tags": [
           "License"
         ],
-        "operationId": "GetLicensesByPersonId",
+        "operationId": "GetLicensesByDriverID",
         "parameters": [
           {
-            "name": "PersonID",
+            "name": "DriverID",
             "in": "path",
             "required": true,
             "schema": {
@@ -2026,6 +2026,39 @@
           "LocalDrivingLicenseApplication"
         ],
         "operationId": "HasApplication",
+        "parameters": [
+          {
+            "name": "personId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "licenseClassId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/LocalDrivingLicenseApplication/HasAlreadyLicense/{personId}/{licenseClassId}": {
+      "get": {
+        "tags": [
+          "LocalDrivingLicenseApplication"
+        ],
+        "operationId": "HasAlreadyLicense",
         "parameters": [
           {
             "name": "personId",

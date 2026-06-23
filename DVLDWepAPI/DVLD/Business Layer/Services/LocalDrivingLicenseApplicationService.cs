@@ -58,7 +58,19 @@ namespace Business_Layer.Services
             int returnedId;
 
             var LocalApplication = SqlHelper.ExecuteeQuerySingl<int>(
-                "SPGetLocalApplicationbyPeronIdAndLicenseClassID",
+                "SPHasActiveApplication",
+                new { Id = 0, PersonId = personId, LicenseClassID = licenseClassId },
+                out returnedId
+            );
+
+            return returnedId;
+        }
+        public int HasAlreadyLicense (int personId, int licenseClassId)
+        {
+            int returnedId;
+
+            var LocalApplication = SqlHelper.ExecuteeQuerySingl<int>(
+                "SPHasAlreadyLicense",
                 new { Id = 0, PersonId = personId, LicenseClassID = licenseClassId },
                 out returnedId
             );

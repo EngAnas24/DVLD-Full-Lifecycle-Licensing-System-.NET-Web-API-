@@ -960,20 +960,20 @@
   },
   {
     "ContainingType": "DVLD.Controllers.LicenseController",
-    "Method": "GetLicensesByPersonId",
-    "RelativePath": "api/License/LicensesBy/{PersonID}",
+    "Method": "GetLicensesByDriverID",
+    "RelativePath": "api/License/LicensesBy/{DriverID}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "PersonID",
+        "Name": "DriverID",
         "Type": "System.Int32",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [],
-    "EndpointName": "GetLicensesByPersonId"
+    "EndpointName": "GetLicensesByDriverID"
   },
   {
     "ContainingType": "DVLD.Controllers.LicenseController",
@@ -1219,6 +1219,28 @@
     ],
     "ReturnTypes": [],
     "EndpointName": "HasApplication"
+  },
+  {
+    "ContainingType": "DVLD.Controllers.LocalDrivingLicenseApplicationController",
+    "Method": "HasAlreadyLicense",
+    "RelativePath": "api/LocalDrivingLicenseApplication/HasAlreadyLicense/{personId}/{licenseClassId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "personId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "licenseClassId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "HasAlreadyLicense"
   },
   {
     "ContainingType": "DVLD.Controllers.LocalDrivingLicenseApplicationController",

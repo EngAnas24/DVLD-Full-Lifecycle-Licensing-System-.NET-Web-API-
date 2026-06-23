@@ -112,29 +112,35 @@ namespace DVLD.Licenses.Local_Licenses
             var Licenseinfo = await _licenseService.GetLicenseByApplicationIdAsync(_LocalDrivingLicenseApplication.ApplicationID);
             var App = await _applicationService.GetApplicationByIdAsync(_LocalDrivingLicenseApplication.ApplicationID);
 
-            if (App != null)
-              Driver = await _driverService.GetDriverByPersonIDAsync(App.ApplicantPersonID);
+            int driverId = -1;
 
-           
+            var existingDriver = await _driverService.GetDriverByPersonIDAsync(App.ApplicantPersonID);
 
-            int DriverId = -1;
-            if(Driver == null)
+            if (existingDriver != null)
             {
-                driver = new Driver()
+                driverId = existingDriver.DriverID;
+            }
+            else
+            {
+                var newDriver = new Driver()
                 {
                     CreatedDate = DateTime.Now,
                     PersonID = App.ApplicantPersonID,
                     CreatedByUserID = clsGlobal.GetUser.ID
                 };
-            }
-            var SaveDriverResult = await _driverService.AddDriverAsync(driver);
-            if (SaveDriverResult != null)
-            {
-                DriverId = SaveDriverResult.DriverID;
-            }
-            else
-                MessageBox.Show("Error: Driver's Data Is not Saved Successfully.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
+                var saveDriverResult = await _driverService.AddDriverAsync(newDriver);
+
+                if (saveDriverResult != null)
+                {
+                    driverId = saveDriverResult.DriverID;
+                }
+                else
+                {
+                    MessageBox.Show("Error: Driver's Data Is not Saved Successfully.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
 
             var LicenseClassID= await _ClassService.GetLicenseClassIDByLocalAppID(_LocalDrivingLicenseApplicationID);
             var LicenseClassInfo = await _ClassService.GetLicenseClassByIdAsync(LicenseClassID);
@@ -146,7 +152,7 @@ namespace DVLD.Licenses.Local_Licenses
             var license = new clsLicense()
             {
                 ApplicationID = _LocalDrivingLicenseApplication.ApplicationID,
-                DriverID = DriverId,
+                DriverID = driverId,
                 CreatedByUserID = clsGlobal.GetUser.ID,
                 ExpirationDate = DateTime.Now.AddYears(LicenseClassInfo.DefaultValidityLength),
                 IsActive = 1,

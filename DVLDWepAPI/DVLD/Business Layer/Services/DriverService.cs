@@ -36,11 +36,11 @@ namespace BusinessLayer.Services
         }
         public int InsertDriver(Driver Driver)
         {
-            return SqlHelper.ExecuteNonQuery("[SPInsertUpdateDriver]", Driver, true);
+            return SqlHelper.ExecuteNonQuery("SPInsertUpdateDriver", Driver, true);
         }
         public int UpdateDriver(Driver Driver)
         {
-            return SqlHelper.ExecuteNonQuery("[SPInsertUpdateDriver]", Driver, isInsert: false);
+            return SqlHelper.ExecuteNonQuery("SPInsertUpdateDriver", Driver, isInsert: false);
         }
         public int DeleteDriver(int id)
         {

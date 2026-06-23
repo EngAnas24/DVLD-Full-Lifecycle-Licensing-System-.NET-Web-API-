@@ -64,8 +64,8 @@ namespace DVLD.Controllers
                 DetainedLicense.LicenseID = insertedId;
 
                 return CreatedAtRoute(
-                "GetDetainedLicenseByDetainedLicenseID", // الاسم هنا
-                new { DetainedLicenseID = insertedId },
+                "GetDetainedLicenseByLicenseID", // الاسم هنا
+                new { LicenseID = insertedId },
                 DetainedLicense
             );
             }
@@ -118,8 +118,10 @@ namespace DVLD.Controllers
             try
             {
                 bool isDetained = DetainedLicenseService.CheckIsLicenseDetained(LicenseID);
-
-                return Ok(isDetained);
+                if(isDetained)
+                    return Ok(true);
+                else
+                    return NotFound(false);
             }
             catch (Exception ex)
             {

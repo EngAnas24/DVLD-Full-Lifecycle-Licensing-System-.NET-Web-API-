@@ -175,10 +175,18 @@ namespace DVLD.Controllers
             if (licenseClassId <= 0) return BadRequest("معرف فئة الرخصة غير صالح.");
 
             var LocalDrivingLicenseApplication = LocalDrivingLicenseApplicationService.HasApplication(personId, licenseClassId  );
-            return LocalDrivingLicenseApplication <= 0 ? NotFound($" التقديم موجود مسبقا.") : Ok(LocalDrivingLicenseApplication);
+            return LocalDrivingLicenseApplication <= 0 ? NotFound($" التقديم غير موجود مسبقا.") : Ok(LocalDrivingLicenseApplication);
         }
 
+        [HttpGet("HasAlreadyLicense/{personId}/{licenseClassId}", Name = "HasAlreadyLicense")]
+        public IActionResult HasAlreadyLicense(int personId, int licenseClassId)
+        {
+            if (personId <= 0) return BadRequest("معرف الشخص غير صالح.");
+            if (licenseClassId <= 0) return BadRequest("معرف فئة الرخصة غير صالح.");
 
+            var LocalDrivingLicenseApplication = LocalDrivingLicenseApplicationService.HasAlreadyLicense(personId, licenseClassId);
+            return LocalDrivingLicenseApplication <= 0 ? NotFound($"ما عنده رخصة مسبقا") : Ok(LocalDrivingLicenseApplication);
+        }
 
     }
 }

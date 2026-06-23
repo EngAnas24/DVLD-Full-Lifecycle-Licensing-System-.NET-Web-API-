@@ -60,13 +60,7 @@ namespace DVLD.Peoples.Controls
                 else
                     pbPersonImage.Image = Resources.Female_512;
 
-                string ImagePath = _Person.ImagePath;
-                if (ImagePath != "")
-                    if (File.Exists(ImagePath))
-                        pbPersonImage.ImageLocation = ImagePath;
-                    else
-                        MessageBox.Show("Could not find this image: = " + ImagePath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
+               
             }
 
             private void _FillPersonInfo()
@@ -116,13 +110,15 @@ namespace DVLD.Peoples.Controls
             }
         private void DisplayPersonImage(string imageName)
         {
+            
 
             string baseApiUrl = "http://localhost:5067/uploads/people/";
             string defaultImage = baseApiUrl + "default.png";
 
             if (string.IsNullOrEmpty(imageName))
             {
-                pbPersonImage.LoadAsync(defaultImage);
+
+                _LoadPersonImage();
                 return;
             }
 
