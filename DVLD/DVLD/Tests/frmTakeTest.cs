@@ -69,7 +69,7 @@ namespace DVLD.Tests
                 lblUserMessage.Visible = true;
                 rbFail.Enabled = false;
                 rbPass.Enabled = false;
-                btnSave.Enabled = false; // حماية إضافية لو الاختبار مسجل سابقاً
+                btnSave.Enabled = false;
             }
         }
 
@@ -101,7 +101,6 @@ namespace DVLD.Tests
                 MessageBox.Show("Data Saved Successfully.", "Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 btnSave.Enabled = false;
 
-                // 🎯 الحل الجذري: إسناد النتيجة كمكتملة وإغلاق الشاشة فوراً
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }

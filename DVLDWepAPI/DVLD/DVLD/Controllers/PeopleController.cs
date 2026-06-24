@@ -8,13 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DVLD.Controllers
 {
-    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    // استخدام Primary Constructor بشكل صحيح
     public class PeopleController(
-        PeopleService peopleService,
-        IWebHostEnvironment _webHostEnvironment) : ControllerBase
+    PeopleService peopleService,
+    IWebHostEnvironment _webHostEnvironment) : ControllerBase
     {
         private readonly IWebHostEnvironment webHostEnvironment = _webHostEnvironment;
 
@@ -29,7 +27,7 @@ namespace DVLD.Controllers
                 : Ok(peoples);
         }
 
-        [HttpGet("{id}", Name = "GetPersonById")] // أضفنا اسماً للـ Route هنا
+        [HttpGet("{id}", Name = "GetPersonById")]
         public IActionResult GetPeopleById(int id)
         {
             if (id <= 0) return BadRequest("معرف الشخص غير صالح.");
@@ -48,7 +46,6 @@ namespace DVLD.Controllers
                 var insertedId = peopleService.InsertPeople(people);
                 if (insertedId > 0)
                 {
-                    // الآن سيعمل التوجيه بشكل صحيح لميثود GetById
                     return CreatedAtRoute("GetPersonById", new { id = insertedId }, people);
                 }
                 return BadRequest("فشل في إضافة الشخص.");
@@ -80,25 +77,48 @@ namespace DVLD.Controllers
         public IActionResult DeletePerson(int id)
         {
             if (id <= 0) return BadRequest("المعرف غير صالح.");
+
             var person = peopleService.GetPersonById(id);
-            if (person == null) return NotFound();
+            if (person == null) return NotFound("الشخص غير موجود.");
 
-
-            // 2. حذف ملف الصورة من المجلد إذا كان موجوداً
-            if (!string.IsNullOrEmpty(person.ImagePath))
+            try
             {
-                var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads/people", person.ImagePath);
-                if (System.IO.File.Exists(filePath))
+                int result = peopleService.DeletePeople(id);
+
+                if (result > 0)
                 {
-                    System.IO.File.Delete(filePath);
+                    if (!string.IsNullOrEmpty(person.ImagePath))
+                    {
+                        var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads/people", person.ImagePath);
+                        if (System.IO.File.Exists(filePath))
+                        {
+                            try
+                            {
+                                System.IO.File.Delete(filePath);
+                            }
+                            catch (Exception fileEx)
+                            {
+                            }
+                        }
+                    }
+
+                    return Ok("تم الحذف بنجاح");
                 }
+
+                return BadRequest("فشل حذف الشخص من قاعدة البيانات");
             }
-
-            int result = peopleService.DeletePeople(id);
-
-            if (result > 0) return Ok("تم الحذف بنجاح");
-            return BadRequest("فشل حذف الشخص من قاعدة البيانات");
-
+            catch (DeleteConflictException ex)
+            {
+                return Conflict(new
+                {
+                    message = "لا يمكن حذف هذا السجل لارتباطه ببيانات أخرى.",
+                    dependentTable = ex.DependentTable
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"خطأ داخلي بالسيرفر: {ex.Message}");
+            }
         }
 
         [HttpGet("allCountries")]
@@ -129,11 +149,9 @@ namespace DVLD.Controllers
             if (!Directory.Exists(uploadsFolder))
                 Directory.CreateDirectory(uploadsFolder);
 
-            // إضافة GUID بسيط لمنع مشاكل الكاش وتكرار الأسماء
             var fileName = $"{id}_{Guid.NewGuid().ToString().Substring(0, 5)}{Path.GetExtension(file.FileName)}";
             var filePath = Path.Combine(uploadsFolder, fileName);
 
-            // حذف الصورة القديمة بشكل صحيح
             if (!string.IsNullOrEmpty(oldFileName))
             {
                 oldFileName = Path.GetFileName(oldFileName);
@@ -141,17 +159,15 @@ namespace DVLD.Controllers
                 if (System.IO.File.Exists(oldFullFilePath))
                 {
                     try { System.IO.File.Delete(oldFullFilePath); }
-                    catch { /* سجل الخطأ هنا إذا فشل الحذف */ }
+                    catch { }
                 }
             }
 
-            // حفظ الملف الجديد
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
 
-            // تحديث قاعدة البيانات
             var updateData = new { PersonalID = id, person.NationalNo, ImagePath = fileName };
             int result = peopleService.UpdateImage(updateData);
 
@@ -161,14 +177,12 @@ namespace DVLD.Controllers
         [HttpDelete("delete-image/{id}")]
         public async Task<IActionResult> DeleteImage(int id)
         {
-            // 1. جلب بيانات الشخص للتأكد من وجوده ومعرفة اسم الصورة
             var person = peopleService.GetPersonById(id);
             if (person == null) return NotFound("الشخص غير موجود");
 
             if (string.IsNullOrEmpty(person.ImagePath))
                 return BadRequest("هذا الشخص ليس لديه صورة لحذفها.");
 
-            // 2. حذف الملف الفعلي من السيرفر
             var uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "uploads", "people");
             var fileName = Path.GetFileName(person.ImagePath);
             var fullFilePath = Path.Combine(uploadsFolder, fileName);
@@ -185,8 +199,6 @@ namespace DVLD.Controllers
                 }
             }
 
-            // 3. الخطوة المفقودة: تحديث قاعدة البيانات
-            // نمرر الـ id للخدمة التي تستدعي الـ SP_DeletePersonImage
             int result = peopleService.DeleteImage(id);
 
             if (result > 0)

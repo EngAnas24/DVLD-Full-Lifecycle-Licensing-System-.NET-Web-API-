@@ -170,17 +170,27 @@ namespace DVLD.Peoples
         {
             if (dgvPeople.CurrentRow == null) return;
 
-            if (MessageBox.Show("This person will be deleted!! Are you sure you want to delete?",
-                                "Confirm Delete",
-                                MessageBoxButtons.OKCancel,
-                                MessageBoxIcon.Warning) == DialogResult.OK)
+            int personID = Convert.ToInt32(dgvPeople.CurrentRow.Cells["PersonalID"].Value);
+
+            DialogResult confirmResult = MessageBox.Show(
+                "هل أنت متأكد من حذف هذا الشخص نهائياً؟",
+                "تأكيد الحذف",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning
+            );
+
+            if (confirmResult != DialogResult.Yes) return;
+
+            bool isDeleted = await DVLDServices.Commons.clsFormHelper.ExecuteSafeDeleteAsync(
+                async () => await _peopleService.DeletePersonHttpResponseAsync(personID),
+                "الشخص"
+            );
+
+            if (isDeleted)
             {
-                await _peopleService.DeletePersonAsync(personID);
-                MessageBox.Show("Person Deleted Successfully.", "Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 await _RefreshPeopleList();
             }
         }
-
         private async void btnAddPerson_Click(object sender, EventArgs e)
         {
             frmAddUpdatePerson addUpdatePerson = new frmAddUpdatePerson();

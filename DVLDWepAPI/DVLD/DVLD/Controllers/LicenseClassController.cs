@@ -6,6 +6,7 @@ using DVDL.Domain.Entities;
 using Entites;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using System.Data.SqlClient;
 
 namespace DVLD.Controllers
 {
@@ -102,18 +103,32 @@ namespace DVLD.Controllers
         public IActionResult DeleteLicenseClass(int id)
         {
             if (id <= 0) return BadRequest("المعرف غير صالح.");
-            var licenseclass = LicenseClassService.GetLicenseClassByClassID(id);
-            if (licenseclass == null) return NotFound();
 
+            try
+            {
+                var licenseclass = LicenseClassService.GetLicenseClassByClassID(id);
+                if (licenseclass == null) return NotFound("فئة الرخصة غير موجودة.");
 
-         
-            int result = LicenseClassService.DeleteLicenseClass(id);
+                int result = LicenseClassService.DeleteLicenseClass(id);
 
-            if (result > 0) return Ok("تم الحذف بنجاح");
-            return BadRequest("فشل حذف الشخص من قاعدة البيانات");
+                if (result > 0) return Ok("تم الحذف بنجاح");
 
+                return BadRequest("فشل حذف فئة الرخصة من قاعدة البيانات");
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Number == 547 ||
+                    ex.Message.Contains("conflicted", StringComparison.OrdinalIgnoreCase) &&
+                    ex.Message.Contains("constraint", StringComparison.OrdinalIgnoreCase))
+                {
+                    string dependentTable = SqlHelper.ExtractTableNameFromConstraint(ex.Message);
+
+                    throw new DeleteConflictException(dependentTable, ex.Message);
+                }
+
+                throw new Exception("Database Error: " + ex.Message);
+            }
         }
 
-      
     }
 }

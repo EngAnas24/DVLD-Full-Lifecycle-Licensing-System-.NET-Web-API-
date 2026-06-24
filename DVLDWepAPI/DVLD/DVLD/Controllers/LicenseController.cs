@@ -140,6 +140,9 @@ namespace DVLD.Controllers
         [HttpDelete("DeleteLicense/{id}")]
         public IActionResult DeleteLicense(int id)
         {
+            try
+            {
+
             if (id <= 0) return BadRequest("المعرف غير صالح.");
             var License = LicenseService.GetLicenseByID(id);
             if (License == null) return NotFound();
@@ -151,6 +154,19 @@ namespace DVLD.Controllers
             if (result > 0) return Ok("تم الحذف بنجاح");
             return BadRequest("فشل حذف الشخص من قاعدة البيانات");
 
+            }
+            catch (DeleteConflictException ex)
+            {
+                return Conflict(new
+                {
+                    message = "لا يمكن حذف هذا السجل لارتباطه ببيانات أخرى.",
+                    dependentTable = ex.DependentTable
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"خطأ داخلي بالسيرفر: {ex.Message}");
+            }
         }
 
 

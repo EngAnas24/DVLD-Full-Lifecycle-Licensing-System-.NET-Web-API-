@@ -1,3 +1,4 @@
 wwwroot\uploads\people\1_17332.jpeg
 wwwroot\uploads\people\1_d3c8b.jpg
-wwwroot\uploads\people\2_de036.png
+wwwroot\uploads\people\2_1c314.jpg
+wwwroot\uploads\people\3_1ecb7.png

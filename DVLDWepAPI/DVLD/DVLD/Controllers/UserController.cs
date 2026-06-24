@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Services;
+using DAL.DataAccessLayer.Common;
 using Entites;
 using Microsoft.AspNetCore.Mvc;
 
@@ -105,9 +106,17 @@ namespace DVLD.Controllers
                     return NotFound($"الشخص ذو الرقم {id} غير موجود.");
                 }
             }
+            catch (DeleteConflictException ex)
+            {
+                return Conflict(new
+                {
+                    message = "لا يمكن حذف هذا السجل لارتباطه ببيانات أخرى.",
+                    dependentTable = ex.DependentTable
+                });
+            }
             catch (Exception ex)
             {
-                return BadRequest($"An error occurred: {ex.Message}");
+                return StatusCode(500, $"خطأ داخلي بالسيرفر: {ex.Message}");
             }
         }
 

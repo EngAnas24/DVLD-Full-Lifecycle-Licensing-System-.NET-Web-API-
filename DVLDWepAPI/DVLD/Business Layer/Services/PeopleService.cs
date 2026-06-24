@@ -25,11 +25,11 @@ namespace BusinessLayer.Services
     
         public int InsertPeople(People people)
         {
-            return SqlHelper.ExecuteNonQuery("[SPInsertUpdatePeople]", people, true);
+            return SqlHelper.ExecuteNonQuery("SPInsertUpdatePeople", people, true);
         }
         public int UpdatePeople(People people)
         {
-            return SqlHelper.ExecuteNonQuery("[SPInsertUpdatePeople]", people, isInsert: false);
+            return SqlHelper.ExecuteNonQuery("SPInsertUpdatePeople", people, isInsert: false);
         }
         public int DeletePeople(int id)
         {

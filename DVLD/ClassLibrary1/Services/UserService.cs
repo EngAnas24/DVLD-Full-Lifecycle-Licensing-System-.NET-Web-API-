@@ -100,7 +100,6 @@ namespace DVLDServices.Services
         {
             try
             {
-                // نستخدم User هنا لأن الإضافة تحتاج تفاصيل الاسم (First, Second, etc)
                 var response = await _httpClient.PostAsJsonAsync("api/User/AddUser", User, _jsonOptions);
 
                 if (response.IsSuccessStatusCode)
@@ -120,8 +119,7 @@ namespace DVLDServices.Services
         {
             try
             {
-                // التصحيح 1: تمرير الـ ID داخل رابط الـ URL
-                // التصحيح 2: تمرير الكائن (User) فقط في الـ Body
+
                 var response = await _httpClient.PutAsJsonAsync($"api/User/UpdateUser/{id}", User, _jsonOptions);
 
                 if (response.IsSuccessStatusCode)
@@ -134,7 +132,6 @@ namespace DVLDServices.Services
             }
             catch (Exception ex)
             {
-                // تغيير رسالة الخطأ لتناسب عملية التحديث
                 throw new Exception($"فشلت عملية التحديث: {ex.Message}");
             }
         }
@@ -142,7 +139,7 @@ namespace DVLDServices.Services
         {
             try
             {
-                var response = await _httpClient.DeleteAsync($"api/User/DeleteUser/{id}");
+                var response = await DeleteUserHttpResponseAsync(id);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -160,7 +157,10 @@ namespace DVLDServices.Services
                 throw new Exception("تعذر الاتصال بالسيرفر. تأكد من تشغيل الـ API.");
             }
         }
-
+        public async Task<HttpResponseMessage> DeleteUserHttpResponseAsync(int id)
+        {
+            return await _httpClient.DeleteAsync($"api/User/DeleteUser/{id}");
+        }
         public async Task<bool> ChangePasswordAsync(int userId, string oldPassword, string newPassword)
         {
             try

@@ -5,8 +5,21 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Xml.Linq;
 using DAL.DataAccessLayer.Mapping;
+using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 namespace DAL.DataAccessLayer.Common
 {
+    public class DeleteConflictException : Exception
+    {
+        public string DependentTable { get; private set; }
+
+        public DeleteConflictException(string dependentTable, string message) : base(message)
+        {
+            DependentTable = dependentTable;
+        }
+    }
+
     public static class SqlHelper
     {
         private static string _connectionString;
@@ -27,18 +40,14 @@ namespace DAL.DataAccessLayer.Common
                 using var cmd = new SqlCommand(spName, conn)
                 { CommandType = CommandType.StoredProcedure };
 
-                // 1. إضافة بارامترات البيانات الأخرى
                 cmd.AddParamsFromObject(value, isInsert);
 
-                // 2. الحصول على خاصية المفتاح الأساسي (مثلاً PersonalID)
                 var pkProp = SqlCommandExtensions.FindPrimaryKeyProperty(value.GetType());
                 int currentId = pkProp != null ? Convert.ToInt32(pkProp.GetValue(value) ?? 0) : 0;
 
-                // 3. إعداد بارامتر @ID الموحد
                 var outputParam = new SqlParameter("@ID", SqlDbType.Int)
                 {
                     Direction = ParameterDirection.InputOutput,
-                    // في الإضافة نرسل 0 أو DBNull، وفي التحديث نرسل المعرف الحالي
                     Value = (isInsert || currentId <= 0) ? (object)DBNull.Value : currentId
                 };
                 cmd.Parameters.Add(outputParam);
@@ -46,13 +55,10 @@ namespace DAL.DataAccessLayer.Common
                 conn.Open();
                 cmd.ExecuteNonQuery();
 
-                // 4. التقاط القيمة العائدة
                 int returnedId = (outputParam.Value == DBNull.Value) ? 0 : Convert.ToInt32(outputParam.Value);
 
-                // 5. الحل السحري: تحديث قيمة الـ ID داخل الكائن الأصلي الممرر
                 if (isInsert && returnedId > 0 && pkProp != null)
                 {
-                    // نقوم بحقن الـ ID الجديد داخل الكائن (مثل people.PersonalID)
                     pkProp.SetValue(value, returnedId);
                 }
 
@@ -60,6 +66,13 @@ namespace DAL.DataAccessLayer.Common
             }
             catch (SqlException ex)
             {
+                if (ex.Number == 547)
+                {
+                    string dependentTable = ExtractTableNameFromConstraint(ex.Message);
+
+                    throw new DeleteConflictException(dependentTable, ex.Message);
+                }
+
                 throw new Exception("Database Error: " + ex.Message);
             }
         }
@@ -89,10 +102,8 @@ namespace DAL.DataAccessLayer.Common
                 using var conn = new SqlConnection(_connectionString);
                 using var cmd = new SqlCommand(spName, conn) { CommandType = CommandType.StoredProcedure };
 
-                // 1. إضافة البارامترات العادية
                 cmd.AddParamsFromObject(parameters);
 
-                // 2. معالجة الـ ID كـ InputOutput
                 var pkProp = SqlCommandExtensions.FindPrimaryKeyProperty(parameters.GetType());
                 int currentId = pkProp != null ? Convert.ToInt32(pkProp.GetValue(parameters) ?? 0) : 0;
 
@@ -123,8 +134,21 @@ namespace DAL.DataAccessLayer.Common
             }
         }
 
+        public static string ExtractTableNameFromConstraint(string errorMessage)
+        {
+            var match = Regex.Match(errorMessage, @"table\s+""dbo\.([^""]+)""");
+            if (match.Success)
+            {
+                return match.Groups[1].Value;
+            }
 
+            var altMatch = Regex.Match(errorMessage, @"table\s+'dbo\.([^']+)'");
+            if (altMatch.Success)
+            {
+                return altMatch.Groups[1].Value;
+            }
 
+            return "جداول أخرى مرتبطة";
+        }
     }
 }
-

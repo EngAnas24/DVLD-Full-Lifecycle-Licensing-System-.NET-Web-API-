@@ -244,22 +244,25 @@ namespace DVLD.Users
             UpdateSelectedUserID();
             if (_selectedUserID == -1) return;
 
-            if (MessageBox.Show("Are you sure you want to delete this user?", "Confirm Delete",
-                MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+            DialogResult confirmResult = MessageBox.Show(
+                "هل أنت متأكد من حذف هذا المستخدم نهائياً؟",
+                "تأكيد الحذف",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning
+            );
+
+            if (confirmResult != DialogResult.Yes) return;
+
+            bool isDeleted = await DVLDServices.Commons.clsFormHelper.ExecuteSafeDeleteAsync(
+                async () => await _UserService.DeleteUserHttpResponseAsync(_selectedUserID),
+                "المستخدم"
+            );
+
+            if (isDeleted)
             {
-                try
-                {
-                    await _UserService.DeleteUserAsync(_selectedUserID);
-                    MessageBox.Show("User Deleted Successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    await _RefreshUserList();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Deletion failed. Data might be linked. Details: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                await _RefreshUserList();
             }
         }
-
         private async void btnAddUser_Click(object sender, EventArgs e)
         {
             frmAddUpdateUser addUpdateUser = new frmAddUpdateUser();

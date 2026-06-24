@@ -3,6 +3,8 @@ using DataAccessLayer.Dtos;
 using Entites;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -91,27 +93,26 @@ namespace Business_Layer.Services
         }
         public int FindPersonByLicenseId(int licenseId)
         {
+            var parameters = new FindPersonByLicenseIdModel
+            {
+                ID = 0,
+                LicenseID = licenseId
+            };
+
             int outId = 0;
+            SqlHelper.ExecuteeQuerySingl<bool>("SPFindPersonByLicenseId", parameters, out outId);
 
-            SqlHelper.ExecuteeQuerySingl<bool>(
-                "SPFindPersonByLicenseId",
-                new { LicenseID = licenseId },
-                out outId
-            );
-
-            return outId;
+            return outId; 
         }
-        public class UpdateDetainedLicenseDto
-        {
-            public int ID { get; set; }
-            public int ReleaseApplicationID { get; set; }
-            public int CreatedByUserID { get; set; }
-            public DateTime ReleaseDate { get; set; }
-            public bool IsReleased { get; set; }
+        public class FindPersonByLicenseIdModel
+            {
+                [Key]
+                public int ID { get; set; }
 
-        }
+                public int LicenseID { get; set; }
+            }
 
 
-       
-    }
+
+}
 }

@@ -395,22 +395,6 @@
   },
   {
     "ContainingType": "DVLD.Controllers.DetainedLicenseController",
-    "Method": "FindPersonByLicenseId",
-    "RelativePath": "api/DetainedLicense/{licenseId}",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "licenseId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "DVLD.Controllers.DetainedLicenseController",
     "Method": "GetDetainedLicenseByLicenseID",
     "RelativePath": "api/DetainedLicense/{LicenseID}",
     "HttpMethod": "GET",
@@ -494,6 +478,22 @@
     "Parameters": [
       {
         "Name": "DetainedLicenseID",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "DVLD.Controllers.DetainedLicenseController",
+    "Method": "FindPersonByLicenseId",
+    "RelativePath": "api/DetainedLicense/FindPersonByLicenseId/{licenseId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "licenseId",
         "Type": "System.Int32",
         "IsRequired": true
       }

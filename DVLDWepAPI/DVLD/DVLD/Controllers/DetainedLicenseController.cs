@@ -64,7 +64,7 @@ namespace DVLD.Controllers
                 DetainedLicense.LicenseID = insertedId;
 
                 return CreatedAtRoute(
-                "GetDetainedLicenseByLicenseID", // الاسم هنا
+                "GetDetainedLicenseByLicenseID", 
                 new { LicenseID = insertedId },
                 DetainedLicense
             );
@@ -95,19 +95,33 @@ namespace DVLD.Controllers
         [HttpDelete("DeleteDetainedLicense/{DetainedLicenseID}")]
         public IActionResult DeleteDetainedLicense(int DetainedLicenseID)
         {
-            if (DetainedLicenseID <= 0) return BadRequest("المعرف غير صالح.");
-            var DetainedLicense = DetainedLicenseService.GetDetainedLicenseByID(DetainedLicenseID);
-            if (DetainedLicense == null) return NotFound();
+            try {
+                if (DetainedLicenseID <= 0) return BadRequest("المعرف غير صالح.");
+                var DetainedLicense = DetainedLicenseService.GetDetainedLicenseByID(DetainedLicenseID);
+                if (DetainedLicense == null) return NotFound();
 
 
 
-            int result = DetainedLicenseService.DeleteDetainedLicense(DetainedLicenseID);
+                int result = DetainedLicenseService.DeleteDetainedLicense(DetainedLicenseID);
 
-            if (result > 0) return Ok("تم الحذف بنجاح");
-            return BadRequest("فشل حذف الشخص من قاعدة البيانات");
+                if (result > 0) return Ok("تم الحذف بنجاح");
+                return BadRequest("فشل حذف الشخص من قاعدة البيانات");
 
+            }
+            
+            catch (DeleteConflictException ex)
+            {
+                return Conflict(new
+                {
+                    message = "لا يمكن حذف هذا السجل لارتباطه ببيانات أخرى.",
+                    dependentTable = ex.DependentTable
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"خطأ داخلي بالسيرفر: {ex.Message}");
+            }
         }
-
 
         [HttpGet("IsDetained/{LicenseID}")]
         public IActionResult IsLicenseDetained(int LicenseID)
@@ -152,7 +166,7 @@ namespace DVLD.Controllers
                 return StatusCode(500, $"خطأ داخلي بالسيرفر أثناء الـ Transaction: {ex.Message}");
             }
         }
-        [HttpPost("{licenseId}")]
+        [HttpPost("FindPersonByLicenseId/{licenseId}")]
         public IActionResult FindPersonByLicenseId(int licenseId)
         {
             if (licenseId <= 0)
@@ -164,7 +178,7 @@ namespace DVLD.Controllers
 
                 if (personId > 0)
                 {
-                    return Ok(personId);
+                    return Ok(new { PersonID = personId });
                 }
                 else
                 {

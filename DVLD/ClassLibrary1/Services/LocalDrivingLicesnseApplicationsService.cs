@@ -175,8 +175,7 @@ namespace DVLDServices.Services
         {
             try
             {
-                var response = await _httpClient.DeleteAsync($"api/LocalDrivingLicenseApplication/DeleteLocalApplication/{id}");
-
+                var response = await DeleteLocalApplicationHttpResponseAsync(id);
                 if (response.IsSuccessStatusCode)
                 {
                     return "Deleted Successfully";
@@ -193,10 +192,14 @@ namespace DVLDServices.Services
                 throw new Exception("تعذر الاتصال بالسيرفر. تأكد من تشغيل الـ API.");
             }
         }
+        public async Task<HttpResponseMessage> DeleteLocalApplicationHttpResponseAsync(int localAppId)
+        {
+            return await _httpClient.DeleteAsync($"api/LocalDrivingLicenseApplication/DeleteLocalApplication/{localAppId}");
+        }
 
 
 
-      
+
         public class LocalDrivingLicenseApplications
         {
             public int LocalDrivingLicenseApplicationID { get; set; }

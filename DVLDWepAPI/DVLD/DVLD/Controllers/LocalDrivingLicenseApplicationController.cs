@@ -146,6 +146,9 @@ namespace DVLD.Controllers
         [HttpDelete("DeleteLocalApplication/{id}")]
         public IActionResult DeleteLocalApplication(int id)
         {
+            try
+            {
+
             if (id <= 0) return BadRequest("المعرف غير صالح.");
             var LocalDrivingLicenseApplication = LocalDrivingLicenseApplicationService.GetLocalApplicationByIdAsync(id);
             if (LocalDrivingLicenseApplication == null) return NotFound();
@@ -156,6 +159,19 @@ namespace DVLD.Controllers
 
             if (result > 0) return Ok("تم الحذف بنجاح");
             return BadRequest("فشل حذف التقديم من قاعدة البيانات");
+            }
+            catch (DeleteConflictException ex)
+            {
+                return Conflict(new
+                {
+                    message = "لا يمكن حذف هذا السجل لارتباطه ببيانات أخرى.",
+                    dependentTable = ex.DependentTable
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"خطأ داخلي بالسيرفر: {ex.Message}");
+            }
 
         }
 

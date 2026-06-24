@@ -15,7 +15,6 @@ using System.Windows.Forms;
 using static DVLDServices.Services.clsApplicationService;
 using static DVLDServices.Services.LocalDrivingLicesnseApplicationsService;
 using static DVLDServices.Services.TestAppointmentService;
-
 namespace DVLD.Applications.Local_Driving_License
 {
     public partial class frmListLocalDrivingLicesnseApplications : Form
@@ -207,29 +206,50 @@ namespace DVLD.Applications.Local_Driving_License
 
         private async void DeleteApplicationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int LocalAppID = (int)dgvLocalDrivingLicenseApplications.CurrentRow.Cells["LocalDrivingLicenseApplicationID"].Value;
-            var LocalApp = await _LocalappService.GetLocalApplicationByIdAsync(LocalAppID);
-            DialogResult result = MessageBox.Show("هل انت متاكد من حذف التقديم؟", "", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-            if (result == DialogResult.Yes)
+            if (dgvLocalDrivingLicenseApplications.CurrentRow == null) return;
+
+            int localAppId = Convert.ToInt32(dgvLocalDrivingLicenseApplications.CurrentRow.Cells["LocalDrivingLicenseApplicationID"].Value);
+
+            DialogResult dialogResult = MessageBox.Show("هل أنت متأكد من حذف هذا التقديم والطلب المرتبط به نهائياً؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dialogResult != DialogResult.Yes)
             {
-                if (LocalApp.ApplicationID == 0)
+                MessageBox.Show("تم إلغاء عملية الحذف.", "ملغى", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            var localApp = await _LocalappService.GetLocalApplicationByIdAsync(localAppId);
+            if (localApp == null || localApp.ApplicationID == 0)
+            {
+                MessageBox.Show("خطأ: لم يتم العثور على بيانات الطلب الأساسي المرتبط (ApplicationID غير صالح).", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            bool isLocalAppDeleted = await DVLDServices.Commons.clsFormHelper.ExecuteSafeDeleteAsync(
+                async () => await _LocalappService.DeleteLocalApplicationHttpResponseAsync(localAppId),
+                "طلب رخصة القيادة المحلية"
+            );
+
+            if (!isLocalAppDeleted) return;
+
+            try
+            {
+                var response = await _applicationService.DeleteApplicationHttpResponseAsync(localApp.ApplicationID);
+
+                if (response.IsSuccessStatusCode || response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
-                    MessageBox.Show("ApplicationID غير صالح");
-                    return;
+                    _LoadData();
                 }
-
-                await _LocalappService.DeleteLocalApplication(LocalAppID);
-                await _applicationService.DeleteApplicationAsync(LocalApp.ApplicationID);
-
-                MessageBox.Show("تم الحذف بنجاح", "", 0, MessageBoxIcon.Information);
+                else if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
+                {
+                    MessageBox.Show("تم حذف الطلب المحلي، لكن تعذر حذف الطلب العام لارتباطه بسجلات أخرى في النظام.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    _LoadData();
+                }
+            }
+            catch
+            {
                 _LoadData();
             }
-            else
-            {
-                MessageBox.Show("تم الغاء الحذف", "", 0, MessageBoxIcon.Information);
-            }
         }
-
         private async void CancelApplicaitonToolStripMenuItem_Click(object sender, EventArgs e)
         {
             int LocalAppID = (int)dgvLocalDrivingLicenseApplications.CurrentRow.Cells["LocalDrivingLicenseApplicationID"].Value;

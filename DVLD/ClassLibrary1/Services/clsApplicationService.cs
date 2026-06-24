@@ -83,24 +83,19 @@ namespace DVLDServices.Services
 
                 if (response.IsSuccessStatusCode)
                 {
-                    // 1. نقرأ المحتوى كنص عادي (لأن السيرفر يرسل نص وليس JSON)
                     var content = await response.Content.ReadAsStringAsync();
 
-                    // 2. نحول النص إلى رقم (Integer)
                     if (int.TryParse(content, out int result))
                     {
                         return result;
                     }
 
-                    // في حال نجح الطلب ولكن المحتوى ليس رقماً (حالة نادرة)
                     return 0;
                 }
 
-                // معالجة حالة عدم الوجود
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                     return 0;
 
-                // معالجة الأخطاء الأخرى
                 var error = await response.Content.ReadAsStringAsync();
                 throw new Exception($"خطأ {response.StatusCode}: {error}");
             }
@@ -154,7 +149,7 @@ namespace DVLDServices.Services
         {
             try
             {
-                var response = await _httpClient.DeleteAsync($"api/Application/DeleteApplication/{id}");
+                var response = await DeleteApplicationHttpResponseAsync(id);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -172,7 +167,10 @@ namespace DVLDServices.Services
                 throw new Exception("تعذر الاتصال بالسيرفر. تأكد من تشغيل الـ API.");
             }
         }
-
+        public async Task<HttpResponseMessage> DeleteApplicationHttpResponseAsync(int id)
+        {
+            return await _httpClient.DeleteAsync($"api/Application/DeleteApplication/{id}");
+        }
         public enum EnApplicationStatus
         {
             New = 1,

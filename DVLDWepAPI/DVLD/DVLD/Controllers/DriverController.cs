@@ -95,17 +95,31 @@ namespace DVLD.Controllers
         [HttpDelete("DeleteDriver/{DriverID}")]
         public IActionResult DeleteDriver(int DriverID)
         {
-            if (DriverID <= 0) return BadRequest("المعرف غير صالح.");
-            var driver = DriverService.GetDriverByDriverID(DriverID);
-            if (driver == null) return NotFound();
+            try
+            {
+                if (DriverID <= 0) return BadRequest("المعرف غير صالح.");
+                var driver = DriverService.GetDriverByDriverID(DriverID);
+                if (driver == null) return NotFound();
 
 
-         
-            int result = DriverService.DeleteDriver(DriverID);
 
-            if (result > 0) return Ok("تم الحذف بنجاح");
-            return BadRequest("فشل حذف الشخص من قاعدة البيانات");
+                int result = DriverService.DeleteDriver(DriverID);
 
+                if (result > 0) return Ok("تم الحذف بنجاح");
+                return BadRequest("فشل حذف الشخص من قاعدة البيانات");
+            }
+            catch (DeleteConflictException ex)
+            {
+                return Conflict(new
+                {
+                    message = "لا يمكن حذف هذا السجل لارتباطه ببيانات أخرى.",
+                    dependentTable = ex.DependentTable
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"خطأ داخلي بالسيرفر: {ex.Message}");
+            }
         }
 
 

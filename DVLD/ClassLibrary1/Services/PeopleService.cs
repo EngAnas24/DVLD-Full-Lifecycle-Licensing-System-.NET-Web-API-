@@ -114,7 +114,8 @@ namespace DVLDServices.Services
         {
             try
             {
-                var response = await _httpClient.DeleteAsync($"api/People/DeletePerson/{id}");
+
+                var response =await DeletePersonHttpResponseAsync(id);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -131,6 +132,10 @@ namespace DVLDServices.Services
             {
                 throw new Exception("تعذر الاتصال بالسيرفر. تأكد من تشغيل الـ API.");
             }
+        }
+        public async Task<HttpResponseMessage> DeletePersonHttpResponseAsync(int id)
+        {
+            return await _httpClient.DeleteAsync($"api/People/DeletePerson/{id}");
         }
         public async Task<bool> UploadPersonImage(int id, string localFilePath)
         {

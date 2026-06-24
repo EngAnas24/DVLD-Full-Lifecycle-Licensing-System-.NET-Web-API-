@@ -72,7 +72,6 @@ namespace DVLD.Controllers
         [HttpGet("GetClassID/{ClassName}")]
         public IActionResult GetClassID(string ClassName)
         {
-            // استخدام OR (||) لضمان أن جميع المعرفات صحيحة
             if (string.IsNullOrEmpty(ClassName))
             {
                 return BadRequest("بيانات الاستعلام غير كاملة أو غير صالحة.");

@@ -88,6 +88,8 @@ namespace DVLD.Controllers
         [HttpDelete("DeleteApplication/{id}")]
         public IActionResult DeleteApplication(int id)
         {
+            try
+            {
             if (id <= 0) return BadRequest("المعرف غير صالح.");
             var application = ApplicationService.GetApplicationById(id);
             if (application == null) return NotFound();
@@ -99,6 +101,19 @@ namespace DVLD.Controllers
             if (result > 0) return Ok("تم الحذف بنجاح");
             return BadRequest("فشل حذف التقديم من قاعدة البيانات");
 
+            }
+            catch (DeleteConflictException ex)
+            {
+                return Conflict(new
+                {
+                    message = "لا يمكن حذف هذا السجل لارتباطه ببيانات أخرى.",
+                    dependentTable = ex.DependentTable
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"خطأ داخلي بالسيرفر: {ex.Message}");
+            }
         }
 
       

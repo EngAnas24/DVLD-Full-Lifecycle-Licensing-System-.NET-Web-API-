@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static ClassLibrary1.Services.DetainedLicenseService;
 using static DVLDServices.Services.ApplicationTypeService;
 
 namespace DVLD.Applications.Rlease_Detained_License

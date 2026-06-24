@@ -19,7 +19,6 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
     });
 
-// 2. تسجيل الخدمات (Dependency Injection)
 builder.Services.AddScoped<PeopleService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<ApplicationTypeService>();

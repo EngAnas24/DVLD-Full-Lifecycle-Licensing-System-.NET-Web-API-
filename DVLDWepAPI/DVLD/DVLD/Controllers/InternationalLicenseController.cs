@@ -115,16 +115,31 @@ namespace DVLD.Controllers
         [HttpDelete("DeleteInternationalLicense/{id}")]
         public IActionResult DeleteInternationalLicense(int id)
         {
-            if (id <= 0) return BadRequest("المعرف غير صالح.");
-            var InternationalLicense = InternationalLicenseService.GetInternationalLicenseByID(id);
-            if (InternationalLicense == null) return NotFound();
+            try
+            {
+                if (id <= 0) return BadRequest("المعرف غير صالح.");
+                var InternationalLicense = InternationalLicenseService.GetInternationalLicenseByID(id);
+                if (InternationalLicense == null) return NotFound();
 
 
-         
-            int result = InternationalLicenseService.DeleteInternationalLicense(id);
 
-            if (result > 0) return Ok("تم الحذف بنجاح");
-            return BadRequest("فشل حذف الشخص من قاعدة البيانات");
+                int result = InternationalLicenseService.DeleteInternationalLicense(id);
+
+                if (result > 0) return Ok("تم الحذف بنجاح");
+                return BadRequest("فشل حذف الشخص من قاعدة البيانات");
+            }
+            catch (DeleteConflictException ex)
+            {
+                return Conflict(new
+                {
+                    message = "لا يمكن حذف هذا السجل لارتباطه ببيانات أخرى.",
+                    dependentTable = ex.DependentTable
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"خطأ داخلي بالسيرفر: {ex.Message}");
+            }
 
         }
 
